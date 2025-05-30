@@ -1,0 +1,321 @@
+/* Make body and html fullscreen */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main container takes full viewport */
+body {
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+/* Header should be minimal or hidden for fullscreen experience */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: var(--space-sm) var(--space-md);
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-title {
+  font-size: var(--font-size-base);
+  margin: 0;
+}
+
+.contact-info {
+  display: none; /* Hide in fullscreen mode, will be in contact cell */
+}
+
+/* Projects grid takes full viewport with 30px margin */
+.projects-grid {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  width: calc(100vw - 60px);
+  height: calc(100vh - 60px);
+  display: grid;
+  gap: 42px;
+  /* Initial fallback grid layout to prevent layout shifts */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-rows: repeat(auto-fit, minmax(150px, 1fr));
+  /* Ensure grid fits within viewport with margin */
+  min-height: calc(100vh - 60px);
+  min-width: calc(100vw - 60px);
+  background: transparent;
+  z-index: 10;
+  color: #383838;
+  mix-blend-mode: difference;
+  pointer-events: none; /* Allow clicks to pass through to slideshow navigation */
+}
+
+/* Project items */
+.project-item {
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Ensure minimum size for very small screens */
+  min-width: 150px;
+  min-height: 100px;
+}
+
+/* Enable pointer events on project items for homepage */
+body:not(.project-page):not(.gallery-page) .project-item {
+  pointer-events: auto;
+}
+
+.project-item:hover .project-info,
+.project-item:hover .project-id,
+.project-item:hover .project-slideshow-counter {
+  color: white;
+}
+
+.contact-cell:hover,
+.contact-cell:hover a {
+  color: white;
+}
+
+/* Remove all hover effects on project cells */
+.project-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Project info overlay - now only shows title */
+.project-info {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.project-title {
+  margin-bottom: 0;
+  font-weight: normal;
+}
+
+/* Slideshow counter in project cell */
+.project-slideshow-counter {
+  z-index: 20;
+  pointer-events: none;
+  opacity: 1;
+  display: none; /* Hidden by default, shown only on project pages with active project */
+}
+
+.project-page .project-item:not(.project-item-hidden) .project-slideshow-counter {
+  display: block;
+}
+
+.project-page .project-item:not(.project-item-hidden) {
+  pointer-events: auto; /* Enable clicks on active project cell in project pages */
+}
+
+/* Gallery page rules - same as project page */
+.gallery-page .project-item:not(.project-item-hidden) .project-slideshow-counter {
+  display: block;
+}
+
+.gallery-page .project-item:not(.project-item-hidden) {
+  pointer-events: auto; /* Enable clicks on active project cell in gallery pages */
+}
+
+/* Centered image overlay for hover effect */
+.image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-overlay.visible {
+  opacity: 1;
+}
+
+.image-overlay img {
+  max-height: 70vh;
+  max-width: 90vw;
+  object-fit: contain;
+}
+
+/* Contact/About cell - always bottom left */
+.contact-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: default;
+  position: relative;
+  overflow: visible;
+  /* Initial positioning to prevent layout shift */
+  grid-row: -1; /* Place in last row */
+  grid-column: 1; /* Place in first column */
+  /* Ensure minimum size */
+  min-width: 150px;
+  min-height: 100px;
+  z-index: 15;
+  pointer-events: auto; /* Enable clicks on contact cell */
+}
+
+.contact-cell .contact-content {
+  position: relative;
+  z-index: 25;
+}
+
+.contact-cell .photographer-name {
+  margin-bottom: clamp(0.5rem, 1vw, 1rem);
+}
+
+.contact-cell .contact-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.copyright {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* Project ID overlay for debugging */
+.project-id {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+}
+
+.contact-link-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+}
+
+/* Static project grid for project page */
+.project-item-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.project-item-hidden .project-id,
+.project-item-hidden .project-info {
+  display: none;
+}
+
+/* Content wrapper to maintain flex structure */
+.content-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Project info toggle functionality */
+.contact-cell .project-info {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.contact-cell .project-info.visible {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+}
+
+.contact-cell .contact-content.hidden {
+  display: none;
+}
+
+/* Hide footer in fullscreen mode */
+footer {
+  display: none;
+}
+
+/* Mobile responsive grid adjustments */
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(100px, 1fr));
+  }
+  
+  .contact-cell {
+    /* On mobile, contact cell spans 2 columns */
+    grid-column: 1 / span 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-grid {
+    gap: 10px; /* Much smaller gap for mobile to maximize space */
+    top: 15px; /* Reduce top margin */
+    left: 15px; /* Reduce left margin */
+    width: calc(100vw - 30px); /* Adjust for smaller margins */
+    height: calc(100vh - 30px); /* Adjust for smaller margins */
+  }
+  
+  header {
+    padding: var(--space-xs) var(--space-sm);
+  }
+  
+  .project-item,
+  .contact-cell {
+    min-width: max-content;
+    min-height: 60px;
+  }
+  
+  .project-info {
+    padding: var(--space-xs) 2px;
+  }
+
+  .image-overlay img {
+    max-height: 60vh;
+    max-width: 98vw;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 320px) {
+  .projects-grid {
+    gap: 5px; /* Minimal gap for very small screens */
+    top: 10px;
+    left: 10px;
+    width: calc(100vw - 20px);
+    height: calc(100vh - 20px);
+  }
+  
+  .project-item,
+  .contact-cell {
+    min-width: max-content;
+    min-height: 50px;
+  }
+  
+  .image-overlay img {
+    max-height: 55vh;
+  }
+} 

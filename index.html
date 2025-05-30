@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photographer Portfolio</title>
+    <meta name="description" content="Photography portfolio showcasing various projects and collections">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components/grid.css">
+</head>
+<body>
+    <main class="projects-grid">
+        <!-- Contact cell - always positioned bottom-left -->
+        <div class="contact-cell">
+            <div class="contact-content">
+                <h1 class="photographer-name">Pep Pérez Guarro</h1>
+                <div class="contact-links">
+                    <div class="contact-link-wrapper">
+                        <h1>MAIL</h1>
+                        <a href="mailto:info@pepperezguarro.com">info@pepperezguarro.com</a>
+                    </div>
+                    <div class="contact-link-wrapper">
+                        <h1>TEL</h1>
+                        <a href="tel:+34681378820">+34 681 378 820</a>
+                    </div>
+                    <div class="contact-link-wrapper">
+                        <h1>SOCIAL</h1>
+                        <a href="https://instagram.com/pepperezguarro" target="_blank">@pepperezguarro</a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <h1>© <span id="current-year"></span>, Pep Pérez Guarro</h1>
+                <h1>About</h1>
+            </div>
+        </div>
+        <!-- Projects will be dynamically generated here -->
+    </main>
+
+    <script src="js/data/projects.js"></script>
+    <script src="js/modules/imageLoader.js"></script>
+    <script src="js/modules/gridLayout.js"></script>
+    <script src="js/modules/navigation.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Title | Photographer Portfolio</title>
+    <meta name="description" content="Project description for this photography collection">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components/grid.css">
+    <link rel="stylesheet" href="../css/components/slideshow.css">
+</head>
+<body class="project-page">
+    <main class="projects-grid">
+        <!-- Contact cell - always positioned bottom-left -->
+        <div class="contact-cell">
+            <div class="content-wrapper">
+            <div class="contact-content">
+                <h1 class="photographer-name">Pep Pérez Guarro</h1>
+                <div class="contact-links">
+                    <div class="contact-link-wrapper">
+                        <h1>MAIL</h1>
+                        <a href="mailto:info@pepperezguarro.com">info@pepperezguarro.com</a>
+                    </div>
+                    <div class="contact-link-wrapper">
+                        <h1>TEL</h1>
+                        <a href="tel:+34681378820">+34 681 378 820</a>
+                    </div>
+                    <div class="contact-link-wrapper">
+                        <h1>SOCIAL</h1>
+                        <a href="https://instagram.com/pepperezguarro" target="_blank">@pepperezguarro</a>
+                    </div>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <div class="project-metadata">
+                        <div class="metadata-item">
+                            <span class="label">LOCATION:</span>
+                            <span class="value">City, Country</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">DATE:</span>
+                            <span class="value">Month, Year</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="label">CLIENT:</span>
+                            <span class="value">Client Name</span>
+                        </div>
+                    </div>
+                    <p class="project-description">Project description will go here. This text will describe the context, location, and concept behind this particular photography project.</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <a href="../index.html" class="back-link">Close</a>
+                <a href="gallery.html" class="view-all-link">Gallery</a>
+                <h1 class="project-info-btn">+ Project Info</h1>
+            </div>
+        </div>
+        <!-- Projects will be dynamically generated here -->
+    </main>
+
+    <div class="slideshow-container">
+        <div class="slideshow-wrapper">
+            <!-- Slides will be dynamically inserted here -->
+            <div class="slideshow-nav-area prev" aria-label="Previous image"></div>
+            <div class="slideshow-nav-area next" aria-label="Next image"></div>
+        </div>
+    </div>
+
+    <script src="../js/data/projects.js"></script>
+    <script src="../js/modules/imageLoader.js"></script>
+    <script src="../js/modules/gridLayout.js"></script>
+    <script src="../js/modules/slideshow.js"></script>
+    <script src="../js/modules/navigation.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html> 

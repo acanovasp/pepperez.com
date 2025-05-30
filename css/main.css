@@ -1,0 +1,148 @@
+/*
+   Main Stylesheet
+   Global styles and variables for fullscreen grid layout
+*/
+
+/* Atlas Grotesk Font */
+@font-face {
+  font-family: 'Atlas Grotesk';
+  src: url('../assets/fonts/AtlasGroteskLC-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Variables */
+:root {
+  /* Colors */
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-text-light: #757575;
+  --color-accent: #3d3d3d;
+  --color-border: #e1e1e1;
+  
+  /* Spacing */
+  --space-xs: 0.8rem;
+  --space-sm: 1.6rem;
+  --space-md: 2.4rem;
+  --space-lg: 4.8rem;
+  --space-xl: 8rem;
+  
+  /* Typography */
+  --font-primary: 'Atlas Grotesk', sans-serif;
+  --font-size: 10px;
+  --line-height: 13px;
+  
+  /* Layout */
+  --content-width: 120rem;
+  --content-padding: 2.4rem;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* Base Styles for fullscreen layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Universal font styling - single font style for entire site */
+* {
+  font-family: var(--font-primary);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  font-weight: normal;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  /* Remove padding and max-width for fullscreen */
+}
+
+/* Remove specific heading styles - using universal font style */
+
+a {
+  color: var(--color-text);
+}
+
+a:hover {
+  color: var(--color-accent);
+}
+
+/* Header Styles - minimal for fullscreen */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: var(--space-sm) var(--space-md);
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.site-title {
+  margin: 0;
+}
+
+.contact-info {
+  display: none; /* Hidden in fullscreen mode */
+}
+
+/* Footer hidden in fullscreen mode */
+footer {
+  display: none;
+}
+
+/* Project page and gallery page styles remain the same but with adjusted spacing */
+.project-page,
+.gallery-page {
+  padding: var(--content-padding);
+  max-width: var(--content-width);
+  margin: 0 auto;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.project-page header,
+.gallery-page header {
+  position: relative;
+  background: none;
+  backdrop-filter: none;
+  border: none;
+  padding: var(--space-md) 0;
+  margin-bottom: var(--space-lg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :root {
+    --content-padding: 1.6rem;
+  }
+  
+  header {
+    padding: var(--space-xs) var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --space-lg: 3.2rem;
+    --space-xl: 4.8rem;
+  }
+  
+  header {
+    padding: var(--space-xs);
+  }
+} 

@@ -1,0 +1,164 @@
+/*
+   Slideshow Component Styles
+   For project page image slideshow
+*/
+
+.back-link:hover {
+  color: var(--color-text);
+}
+
+.project-description {
+  width: 100%;
+  line-height: 1.6;
+}
+
+.project-metadata {
+  display: flex;
+  flex-direction: column;
+}
+
+.metadata-item .label {
+  font-weight: 500;
+}
+
+/* Slideshow container */
+.slideshow-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none; /* Allow clicks to pass through except for specific elements */
+}
+
+.slideshow-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity var(--transition-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+/* Default slide layout (fallback) */
+.slide img {
+  max-height: 70vh;
+  max-width: 90vw;
+  object-fit: contain;
+}
+
+/* Fullscreen slide template */
+.slide.slide-fullscreen {
+  background: black;
+}
+
+.slide.slide-fullscreen img {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+}
+
+/* Main slide template (70vh like homepage) */
+.slide.slide-main img {
+  max-height: 70vh;
+  max-width: 90vw;
+  object-fit: contain;
+}
+
+/* Full height slide template (100vh but contained) */
+.slide.slide-fullheight img {
+  height: 100vh;
+  max-height: 100vh;
+  object-fit: contain;
+}
+
+/* Diptych slide template */
+.slide.slide-diptych {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.slide.slide-diptych img {
+  max-height: 70vh;
+  max-width: 45vw;
+  object-fit: contain;
+  flex: 1;
+}
+
+/* Responsive adjustments for diptych */
+@media (max-width: 768px) {
+  .slide.slide-diptych {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .slide.slide-diptych img {
+    max-height: 35vh;
+    max-width: 90vw;
+  }
+}
+
+/* Navigation click areas - invisible overlays */
+.slideshow-nav-area {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 100;
+  /* Invisible but clickable */
+  background: transparent;
+  pointer-events: auto; /* Ensure these areas can receive clicks */
+}
+
+.slideshow-nav-area.prev {
+  left: 0;
+}
+
+.slideshow-nav-area.next {
+  right: 0;
+}
+
+/* Hide the old navigation buttons */
+.slideshow-nav {
+  display: none;
+}
+
+/* Remove slideshow counter from slideshow container */
+.slideshow-counter {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .slideshow-wrapper {
+    padding-bottom: 100%; /* Square aspect ratio on mobile */
+  }
+  
+  .project-metadata {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+} 
