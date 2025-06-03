@@ -34,6 +34,11 @@
   gap: 100px;
   background: white;
   z-index: 1;
+  /* Prevent layout shifts */
+  contain: layout style;
+  will-change: scroll-position;
+  /* Smooth opacity transition for project info toggle */
+  transition: opacity 0.5s ease;
 }
 
 /* Gallery loading state - show when images are loading */
@@ -61,31 +66,50 @@
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  /* Fixed dimensions to prevent layout shifts */
   height: 200px;
+  width: auto;
   flex-shrink: 0;
+  /* Prevent layout recalculation */
+  contain: layout style;
+  /* Reserve space even when empty */
+  min-width: 150px;
 }
 
 .gallery-image {
+  /* Fixed dimensions to prevent shifts */
   height: 200px;
   width: auto;
   object-fit: contain;
   transition: transform var(--transition-medium), opacity var(--transition-medium);
+  /* Start invisible but maintain layout space */
   opacity: 0;
+  /* Prevent layout recalculation */
+  contain: layout;
+  /* Ensure consistent sizing behavior */
+  display: block;
+  image-rendering: auto;
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 /* Loading state - completely hidden, no grey background */
 .gallery-image.loading {
   opacity: 0;
+  /* Maintain space but hide content */
+  visibility: hidden;
 }
 
 /* Loaded state for smooth fade-in */
 .gallery-image.loaded {
   opacity: 1;
+  visibility: visible;
 }
 
 /* Error state - still hidden to avoid broken image icons */
 .gallery-image.error {
   opacity: 0;
+  visibility: hidden;
 }
 
 .gallery-item:hover .gallery-image.loaded {

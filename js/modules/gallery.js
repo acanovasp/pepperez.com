@@ -56,11 +56,18 @@ const Gallery = (function() {
     // Use document fragment for better performance
     const fragment = document.createDocumentFragment();
     
+    // Pre-calculate gallery item dimensions to prevent layout shifts
+    const itemHeight = 200; // Fixed height from CSS
+    
     // Create a gallery item for each image
     imagePaths.forEach((imagePath, index) => {
       const galleryItem = document.createElement('div');
       galleryItem.classList.add('gallery-item');
       galleryItem.dataset.index = index;
+      
+      // Set explicit dimensions to prevent layout shifts
+      galleryItem.style.height = `${itemHeight}px`;
+      galleryItem.style.minWidth = '150px';
       
       const img = document.createElement('img');
       img.classList.add('gallery-image', 'loading');
@@ -70,31 +77,45 @@ const Gallery = (function() {
       img.loading = 'lazy'; // Keep native lazy loading as fallback
       img.decoding = 'async'; // Better performance
       
+      // Pre-set image dimensions to prevent layout shifts
+      img.style.height = `${itemHeight}px`;
+      img.style.width = 'auto';
+      img.style.objectFit = 'contain';
+      
       // Add load event listener for fade-in effect
       img.addEventListener('load', function() {
-        this.classList.remove('loading');
-        this.classList.add('loaded');
-        
-        loadedCount++;
-        // Remove gallery loading state when some images have loaded (for better UX)
-        if (loadedCount >= Math.min(5, totalImages * 0.2)) { // More aggressive - remove after 20% or 5 images
-          galleryContainer.classList.remove('loading');
-        }
+        // Use requestAnimationFrame to batch DOM updates
+        requestAnimationFrame(() => {
+          this.classList.remove('loading');
+          this.classList.add('loaded');
+          
+          loadedCount++;
+          // Remove gallery loading state when some images have loaded (for better UX)
+          if (loadedCount >= Math.min(5, totalImages * 0.2)) { // More aggressive - remove after 20% or 5 images
+            requestAnimationFrame(() => {
+              galleryContainer.classList.remove('loading');
+            });
+          }
+        });
       }, { once: true, passive: true }); // Optimize event listener
       
       // Add error handling - keep image hidden on error
       img.addEventListener('error', function() {
-        this.classList.remove('loading');
-        this.classList.add('error');
-        console.warn(`Failed to load image: ${imagePath}`);
-        // Hide the gallery item completely if image fails to load
-        galleryItem.style.display = 'none';
-        
-        loadedCount++;
-        // Still count errors towards removing loading state
-        if (loadedCount >= Math.min(5, totalImages * 0.2)) {
-          galleryContainer.classList.remove('loading');
-        }
+        requestAnimationFrame(() => {
+          this.classList.remove('loading');
+          this.classList.add('error');
+          console.warn(`Failed to load image: ${imagePath}`);
+          // Hide the gallery item completely if image fails to load
+          galleryItem.style.display = 'none';
+          
+          loadedCount++;
+          // Still count errors towards removing loading state
+          if (loadedCount >= Math.min(5, totalImages * 0.2)) {
+            requestAnimationFrame(() => {
+              galleryContainer.classList.remove('loading');
+            });
+          }
+        });
       }, { once: true, passive: true });
       
       galleryItem.appendChild(img);
@@ -108,17 +129,21 @@ const Gallery = (function() {
       }, { passive: true });
     });
     
-    // Append all items at once for better performance
+    // Append all items at once for better performance and to prevent layout shifts
     galleryContainer.appendChild(fragment);
     
     // Initialize lazy loading for gallery images after creating all items
+    // Use longer timeout to allow browser to settle layouts
     requestAnimationFrame(() => {
-      ImageLoader.lazyLoadImages('.gallery-image');
-      
-      // Fallback: remove loading state after 2 seconds for faster perceived performance
+      // Batch the lazy loading initialization
       setTimeout(() => {
-        galleryContainer.classList.remove('loading');
-      }, 2000);
+        ImageLoader.lazyLoadImages('.gallery-image');
+        
+        // More aggressive fallback: remove loading state faster for better perceived performance
+        setTimeout(() => {
+          galleryContainer.classList.remove('loading');
+        }, 1500); // Reduced from 2 seconds
+      }, 100); // Small delay to let initial layout settle
     });
   }
   

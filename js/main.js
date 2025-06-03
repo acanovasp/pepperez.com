@@ -3,6 +3,75 @@
  * Handles initialization and page-specific functionality
  */
 
+// Prevent WebSocket connections from blocking back/forward cache in production
+(function() {
+  // Detect if we're in a production environment (not local development)
+  const isLocalDevelopment = window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1' ||
+                           window.location.hostname === '0.0.0.0' ||
+                           window.location.hostname.includes('.local') ||
+                           window.location.port !== '';
+  
+  // Also check for common development indicators
+  const isDevelopment = isLocalDevelopment || 
+                       document.documentElement.hasAttribute('data-development') ||
+                       localStorage.getItem('development-mode') === 'true';
+  
+  if (!isDevelopment) {
+    // Override WebSocket constructor to prevent unwanted connections in production
+    const OriginalWebSocket = window.WebSocket;
+    window.WebSocket = function(url, protocols) {
+      // Allow WebSocket connections from the same origin for legitimate use
+      const urlObj = new URL(url, window.location.href);
+      const isSameOrigin = urlObj.origin === window.location.origin;
+      
+      // Block common development tool patterns
+      const isDevelopmentWS = url.includes('livereload') || 
+                             url.includes('browser-sync') || 
+                             url.includes('hot-reload') ||
+                             url.includes(':3000') ||
+                             url.includes(':8080') ||
+                             url.includes(':5500') ||
+                             url.includes('_webpack_hmr');
+      
+      if (isDevelopmentWS) {
+        console.warn('Development WebSocket blocked to enable back/forward cache:', url);
+        // Return a mock WebSocket that doesn't actually connect
+        return {
+          close: () => {},
+          send: () => {},
+          addEventListener: () => {},
+          removeEventListener: () => {},
+          dispatchEvent: () => {},
+          readyState: 3, // CLOSED
+          url: url,
+          protocol: '',
+          extensions: '',
+          bufferedAmount: 0,
+          CONNECTING: 0,
+          OPEN: 1,
+          CLOSING: 2,
+          CLOSED: 3,
+          onopen: null,
+          onclose: null,
+          onmessage: null,
+          onerror: null
+        };
+      }
+      
+      // Allow legitimate WebSocket connections
+      return new OriginalWebSocket(url, protocols);
+    };
+    
+    // Copy static properties and prototype
+    Object.setPrototypeOf(window.WebSocket, OriginalWebSocket);
+    Object.defineProperty(window.WebSocket, 'prototype', {
+      value: OriginalWebSocket.prototype,
+      writable: false
+    });
+  }
+})();
+
 // Initialize critical layout immediately when scripts load (before DOMContentLoaded)
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);
@@ -12,25 +81,36 @@ if (document.readyState === 'loading') {
 }
 
 function initApp() {
+  // Prevent layout shifts during initialization
+  document.documentElement.style.setProperty('--prevent-shifts', '1');
+  
   // Update copyright year
   const yearElement = document.getElementById('current-year');
   if (yearElement) {
     yearElement.textContent = new Date().getFullYear();
   }
   
-  // Determine current page and initialize appropriate modules
-  const currentPath = window.location.pathname;
-  
-  if (currentPath.endsWith('index.html') || currentPath.endsWith('/')) {
-    // Homepage
-    initHomepage();
-  } else if (currentPath.includes('project.html')) {
-    // Project page
-    initProjectPage();
-  } else if (currentPath.includes('gallery.html')) {
-    // Gallery page
-    initGalleryPage();
-  }
+  // Pre-optimize critical rendering path
+  requestAnimationFrame(() => {
+    // Determine current page and initialize appropriate modules
+    const currentPath = window.location.pathname;
+    
+    if (currentPath.endsWith('index.html') || currentPath.endsWith('/')) {
+      // Homepage
+      initHomepage();
+    } else if (currentPath.includes('project.html')) {
+      // Project page
+      initProjectPage();
+    } else if (currentPath.includes('gallery.html')) {
+      // Gallery page
+      initGalleryPage();
+    }
+    
+    // Remove shift prevention after initialization
+    setTimeout(() => {
+      document.documentElement.style.removeProperty('--prevent-shifts');
+    }, 100);
+  });
 }
 
 /**
@@ -225,24 +305,74 @@ function initGalleryPage() {
     return;
   }
   
-  // Initialize static grid layout manager for gallery page
-  const projectsGrid = document.querySelector('.projects-grid');
-  if (projectsGrid) {
-    GridLayout.init('.projects-grid');
-    
-    // Render static projects grid (contact cell is already in HTML)
-    projects.forEach(proj => {
-      const projectElement = createStaticProjectElement(proj, proj.id === projectId);
-      projectsGrid.appendChild(projectElement);
-    });
-    
-    // Apply the fullscreen grid layout
-    GridLayout.applyLayout(projects);
+  // Pre-optimize gallery container to prevent layout shifts
+  const galleryContainer = document.querySelector('.gallery-grid');
+  if (galleryContainer) {
+    // Pre-set container properties to prevent shifts
+    galleryContainer.style.contain = 'layout style';
+    galleryContainer.style.willChange = 'scroll-position';
   }
   
-  // Update page title
-  document.title = `All Images - ${project.title} | Photographer Portfolio`;
-  
+  // Batch DOM updates for better performance
+  requestAnimationFrame(() => {
+    // Initialize static grid layout manager for gallery page
+    const projectsGrid = document.querySelector('.projects-grid');
+    if (projectsGrid) {
+      GridLayout.init('.projects-grid');
+      
+      // Render static projects grid (contact cell is already in HTML)
+      const fragment = document.createDocumentFragment();
+      projects.forEach(proj => {
+        const projectElement = createStaticProjectElement(proj, proj.id === projectId);
+        fragment.appendChild(projectElement);
+      });
+      projectsGrid.appendChild(fragment);
+      
+      // Apply the fullscreen grid layout
+      GridLayout.applyLayout(projects);
+    }
+    
+    // Update page title
+    document.title = `All Images - ${project.title} | Photographer Portfolio`;
+    
+    // Batch metadata updates
+    updateGalleryMetadata(project, projectId);
+    
+    // Get all gallery images
+    const galleryImages = ImageLoader.getGalleryImagePaths(project);
+    
+    // Update the slideshow counter in the active project cell to show total gallery images
+    const projectCounter = document.querySelector('.project-slideshow-counter');
+    if (projectCounter && galleryImages.length > 0) {
+      projectCounter.textContent = `${galleryImages.length} / ${galleryImages.length}`;
+    }
+    
+    // Initialize gallery with all project images using optimized loading
+    if (galleryContainer && galleryImages.length > 0) {
+      // Pre-optimize before gallery initialization
+      galleryContainer.style.visibility = 'hidden';
+      
+      Gallery.init('.gallery-grid', galleryImages, project.folder);
+      
+      // Show gallery after brief delay to allow layout to settle
+      setTimeout(() => {
+        galleryContainer.style.visibility = 'visible';
+      }, 50);
+    } else {
+      console.error('Cannot initialize gallery. Container:', galleryContainer, 'Images:', galleryImages.length);
+    }
+    
+    // Initialize project info toggle functionality
+    initProjectInfoToggle();
+  });
+}
+
+/**
+ * Update gallery page metadata efficiently
+ * @param {Object} project - Project data
+ * @param {string} projectId - Project ID
+ */
+function updateGalleryMetadata(project, projectId) {
   // Update project metadata in contact cell
   const projectTitleElement = document.querySelector('.project-title');
   const projectDescriptionElement = document.querySelector('.project-description');
@@ -266,28 +396,6 @@ function initGalleryPage() {
   if (projectLink) {
     projectLink.href = `project.html?project=${projectId}`;
   }
-  
-  // Get all gallery images
-  const galleryImages = ImageLoader.getGalleryImagePaths(project);
-  
-  // Update the slideshow counter in the active project cell to show total gallery images
-  const projectCounter = document.querySelector('.project-slideshow-counter');
-  if (projectCounter && galleryImages.length > 0) {
-    projectCounter.textContent = `${galleryImages.length} / ${galleryImages.length}`;
-  }
-  
-  // Check if gallery container exists
-  const galleryContainer = document.querySelector('.gallery-grid');
-  
-  // Initialize gallery with all project images
-  if (galleryContainer && galleryImages.length > 0) {
-    Gallery.init('.gallery-grid', galleryImages, project.folder);
-  } else {
-    console.error('Cannot initialize gallery. Container:', galleryContainer, 'Images:', galleryImages.length);
-  }
-  
-  // Initialize project info toggle functionality
-  initProjectInfoToggle();
 }
 
 /**

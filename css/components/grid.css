@@ -47,9 +47,9 @@ header {
   height: calc(100vh - 60px);
   display: grid;
   gap: 42px;
-  /* Initial fallback grid layout to prevent layout shifts */
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-template-rows: repeat(auto-fit, minmax(150px, 1fr));
+  /* Flexible grid that adapts to content - no fixed minimums to prevent overflow */
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, 1fr);
   /* Ensure grid fits within viewport with margin */
   min-height: calc(100vh - 60px);
   min-width: calc(100vw - 60px);
@@ -58,6 +58,15 @@ header {
   color: #383838;
   mix-blend-mode: difference;
   pointer-events: none; /* Allow clicks to pass through to slideshow navigation */
+  /* Prevent layout shifts */
+  contain: layout style;
+  will-change: auto;
+}
+
+/* Override grid color to white on project and gallery pages */
+.project-page .projects-grid,
+.gallery-page .projects-grid {
+  color: white;
 }
 
 /* Project items */
@@ -68,9 +77,9 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Ensure minimum size for very small screens */
-  min-width: 150px;
-  min-height: 100px;
+  /* Flexible minimum size that adapts to viewport */
+  min-width: 80px;
+  min-height: 60px;
 }
 
 /* Enable pointer events on project items for homepage */
@@ -81,11 +90,6 @@ body:not(.project-page):not(.gallery-page) .project-item {
 .project-item:hover .project-info,
 .project-item:hover .project-id,
 .project-item:hover .project-slideshow-counter {
-  color: white;
-}
-
-.contact-cell:hover,
-.contact-cell:hover a {
   color: white;
 }
 
@@ -150,6 +154,8 @@ body:not(.project-page):not(.gallery-page) .project-item {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
+  /* Prevent layout shift */
+  contain: layout;
 }
 
 .image-overlay.visible {
@@ -160,6 +166,13 @@ body:not(.project-page):not(.gallery-page) .project-item {
   max-height: 70vh;
   max-width: 90vw;
   object-fit: contain;
+  /* Reserve space to prevent shifts */
+  min-height: 200px;
+  min-width: 200px;
+  /* Ensure smooth loading */
+  image-rendering: auto;
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 /* Contact/About cell - always bottom left */
@@ -170,12 +183,13 @@ body:not(.project-page):not(.gallery-page) .project-item {
   cursor: default;
   position: relative;
   overflow: visible;
-  /* Initial positioning to prevent layout shift */
-  grid-row: -1; /* Place in last row */
-  grid-column: 1; /* Place in first column */
-  /* Ensure minimum size */
-  min-width: 150px;
-  min-height: 100px;
+  /* Always place in bottom-left to prevent shifts */
+  grid-row: 3;
+  grid-column: 1;
+  /* Flexible minimum size that adapts to viewport */
+  min-width: 80px;
+  min-height: 60px;
+  color: white;
   z-index: 15;
   pointer-events: auto; /* Enable clicks on contact cell */
 }
@@ -252,6 +266,12 @@ body:not(.project-page):not(.gallery-page) .project-item {
   display: none;
 }
 
+/* Reduce gallery grid opacity when project info is visible */
+.gallery-page .contact-cell .project-info.visible ~ * .gallery-grid,
+.gallery-page:has(.project-info.visible) .gallery-grid {
+  opacity: 0.1;
+}
+
 /* Hide footer in fullscreen mode */
 footer {
   display: none;
@@ -260,12 +280,14 @@ footer {
 /* Mobile responsive grid adjustments */
 @media (max-width: 768px) {
   .projects-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    grid-template-rows: repeat(auto-fit, minmax(100px, 1fr));
+    /* Remove the fixed minmax to prevent overflow on mobile too */
+    grid-template-columns: repeat(auto-fit, 1fr);
+    grid-template-rows: repeat(3, 1fr); /* Still prefer 3 rows on mobile */
   }
   
   .contact-cell {
-    /* On mobile, contact cell spans 2 columns */
+    /* On mobile, contact cell spans 2 columns but stays in row 3 */
+    grid-row: 3;
     grid-column: 1 / span 2;
   }
 }
@@ -285,8 +307,8 @@ footer {
   
   .project-item,
   .contact-cell {
-    min-width: max-content;
-    min-height: 60px;
+    min-width: 60px;
+    min-height: 50px;
   }
   
   .project-info {
@@ -311,11 +333,11 @@ footer {
   
   .project-item,
   .contact-cell {
-    min-width: max-content;
-    min-height: 50px;
+    min-width: 50px;
+    min-height: 40px;
   }
   
   .image-overlay img {
     max-height: 55vh;
   }
-} 
+}

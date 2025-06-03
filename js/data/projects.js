@@ -158,5 +158,56 @@ const projects = [
       { type: 'fullscreen', images: ['images/P-09/Comercial4.webp'] }
     ],
     totalImages: 93
+  },
+  {
+    id: 'P-08',
+    title: 'The Jumping Age',
+    description: 'A contemplative study of coastlines and the relationship between land and sea. This series captures the ephemeral nature of coastal landscapes, documenting the ever-changing dialogue between solid ground and flowing water.',
+    date: 'February 2023',
+    location: 'Barcelona, Spain',
+    client: 'Personal Project',
+    folder: 'P-08',
+    coverImage: 'images/P-08/TheJumpingAge5.webp',
+    // Slide templates for different layouts
+    slideTemplates: [
+      { type: 'fullheight', images: ['images/P-08/TheJumpingAge5.webp'] },
+      { type: 'diptych', images: ['images/P-08/TheJumpingAge1.webp', 'images/P-08/TheJumpingAge2.webp'] },
+      { type: 'fullscreen', images: ['images/P-08/TheJumpingAge3.webp'] }
+    ],
+    totalImages: 32
+  },
+  {
+    id: 'P-08',
+    title: 'The Jumping Age',
+    description: 'A contemplative study of coastlines and the relationship between land and sea. This series captures the ephemeral nature of coastal landscapes, documenting the ever-changing dialogue between solid ground and flowing water.',
+    date: 'February 2023',
+    location: 'Barcelona, Spain',
+    client: 'Personal Project',
+    folder: 'P-08',
+    coverImage: 'images/P-08/TheJumpingAge5.webp',
+    // Slide templates for different layouts
+    slideTemplates: [
+      { type: 'fullheight', images: ['images/P-08/TheJumpingAge5.webp'] },
+      { type: 'diptych', images: ['images/P-08/TheJumpingAge1.webp', 'images/P-08/TheJumpingAge2.webp'] },
+      { type: 'fullscreen', images: ['images/P-08/TheJumpingAge3.webp'] }
+    ],
+    totalImages: 32
+  },
+  {
+    id: 'P-08',
+    title: 'The Jumping Age',
+    description: 'A contemplative study of coastlines and the relationship between land and sea. This series captures the ephemeral nature of coastal landscapes, documenting the ever-changing dialogue between solid ground and flowing water.',
+    date: 'February 2023',
+    location: 'Barcelona, Spain',
+    client: 'Personal Project',
+    folder: 'P-08',
+    coverImage: 'images/P-08/TheJumpingAge5.webp',
+    // Slide templates for different layouts
+    slideTemplates: [
+      { type: 'fullheight', images: ['images/P-08/TheJumpingAge5.webp'] },
+      { type: 'diptych', images: ['images/P-08/TheJumpingAge1.webp', 'images/P-08/TheJumpingAge2.webp'] },
+      { type: 'fullscreen', images: ['images/P-08/TheJumpingAge3.webp'] }
+    ],
+    totalImages: 32
   }
 ]; 

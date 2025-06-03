@@ -54,74 +54,83 @@ const GridLayout = (function() {
     // Check if we're on mobile (where contact cell will span 2 columns)
     const isMobile = viewport.width <= 768;
     
-    // Responsive minimum cell dimensions
-    let minCellWidth, minCellHeight, minCols;
+    // STRONGLY PREFER 3 ROWS - this is the key requirement
+    const preferredRows = 3;
+    const maxRows = 4; // Allow 4th row only if cells become too narrow
+    
+    // Dynamic responsive minimum cell dimensions based on viewport
+    let minCellWidth, minCellHeight;
     
     if (viewport.width <= 480) {
-      // Mobile: smaller minimums, ensure at least 3 columns (contact spans 2 + 1 project)
-      minCellWidth = 120;
-      minCellHeight = 80;
-      minCols = 3;
+      // Mobile: smallest minimums
+      minCellWidth = Math.max(100, viewport.width * 0.25); // 25% of viewport but min 100px
+      minCellHeight = 70;
     } else if (viewport.width <= 768) {
-      // Tablet: medium minimums, ensure at least 3 columns  
-      minCellWidth = 150;
-      minCellHeight = 100;
-      minCols = 3;
+      // Small tablet: adaptive minimums
+      minCellWidth = Math.max(120, viewport.width * 0.2); // 20% of viewport but min 120px
+      minCellHeight = 90;
+    } else if (viewport.width <= 1024) {
+      // Large tablet/small desktop: more adaptive
+      minCellWidth = Math.max(140, viewport.width * 0.18); // 18% of viewport but min 140px
+      minCellHeight = 110;
+    } else if (viewport.width <= 1400) {
+      // Medium desktop: balanced approach
+      minCellWidth = Math.max(160, viewport.width * 0.16); // 16% of viewport but min 160px
+      minCellHeight = 130;
     } else {
-      // Desktop: original minimums and behavior (contact cell single column)
-      minCellWidth = 200;
+      // Large desktop: generous minimums
+      minCellWidth = Math.max(200, viewport.width * 0.15); // 15% of viewport but min 200px
       minCellHeight = 150;
-      minCols = 1;
     }
     
     // Calculate ideal aspect ratio for cells (slightly rectangular)
     const idealRatio = 1.3;
     
-    // Try different grid configurations to find the best fit
+    // Try different grid configurations with strong preference for 3 rows
     let bestConfig = null;
     let bestScore = 0;
     
-    // Calculate maximum possible columns and rows based on minimum sizes
-    const maxCols = Math.floor(viewport.width / minCellWidth);
-    const maxRows = Math.floor(viewport.height / minCellHeight);
+    // Calculate effective items for grid calculation
+    const effectiveItems = isMobile ? totalItems + 1 : totalItems; // +1 for contact span on mobile
     
-    // Test grid configurations - adjust for contact cell spanning on mobile
-    const maxTestCols = isMobile ? 
-      Math.min(totalItems + 1, Math.max(maxCols, 8)) : // +1 for contact cell span on mobile
-      Math.min(totalItems, Math.max(maxCols, 8)); // Original logic for desktop
-    const startCols = Math.max(minCols, isMobile ? 2 : 1); // At least 2 for mobile contact span
-    
-    for (let cols = startCols; cols <= maxTestCols; cols++) {
-      // Calculate effective items - only add extra slot for contact on mobile
-      const effectiveItems = isMobile ? totalItems + 1 : totalItems;
-      const rows = Math.ceil(effectiveItems / cols);
-      
-      // Skip if this would exceed our maximum rows
-      if (rows > maxRows && maxRows > 0) continue;
+    // First priority: Try to fit everything in preferred number of rows (3)
+    for (let rows = preferredRows; rows <= maxRows; rows++) {
+      // Calculate columns needed for this row count
+      const cols = Math.ceil(effectiveItems / rows);
       
       // Calculate cell dimensions
       const cellWidth = viewport.width / cols;
       const cellHeight = viewport.height / rows;
       const cellRatio = cellWidth / cellHeight;
       
-      // More lenient size checking for mobile
-      const isAcceptableSize = viewport.width <= 480 ? 
-        (cellWidth >= minCellWidth * 0.8 && cellHeight >= minCellHeight * 0.8) :
-        (cellWidth >= minCellWidth && cellHeight >= minCellHeight);
+      // More flexible size checking - allow smaller cells if viewport demands it
+      const isAcceptableSize = cellWidth >= minCellWidth && cellHeight >= minCellHeight;
+      const isViableSize = cellWidth >= minCellWidth * 0.8 && cellHeight >= minCellHeight * 0.8; // 80% tolerance
       
-      if (!isAcceptableSize) continue;
+      // If not acceptable but viable, and we haven't reached max rows, try next row count
+      if (!isAcceptableSize && !isViableSize && rows < maxRows) {
+        continue;
+      }
       
-      // Score this configuration
+      // Score this configuration with strong preference for 3 rows
       const ratioScore = 1 - Math.abs(cellRatio - idealRatio) / idealRatio;
       const sizeScore = Math.min(cellWidth, cellHeight) / 300; // Prefer larger cells
       const aspectPenalty = cellRatio > 3 || cellRatio < 0.3 ? 0.5 : 1; // Penalize extreme ratios
       
-      // Bonus for meeting minimum column requirements
-      const colBonus = cols >= minCols ? 1.2 : 1.0;
+      // HUGE bonus for using preferred row count (3)
+      const rowPreferenceBonus = rows === preferredRows ? 2.0 : 
+                                rows === preferredRows + 1 ? 1.0 : 0.5;
       
-      const totalScore = (ratioScore * 0.4 + sizeScore * 0.4) * aspectPenalty * colBonus + 0.2;
+      // Size requirement bonus - reward acceptable sizes, tolerate viable ones
+      const sizeBonus = isAcceptableSize ? 1.5 : isViableSize ? 1.2 : 1.0;
       
-      if (totalScore > bestScore) {
+      // Viewport fit bonus - heavily reward configurations that don't overflow
+      const fitsViewport = (cellWidth * cols) <= viewport.width && (cellHeight * rows) <= viewport.height;
+      const viewportBonus = fitsViewport ? 1.3 : 0.8;
+      
+      const totalScore = (ratioScore * 0.25 + sizeScore * 0.25) * aspectPenalty * rowPreferenceBonus * sizeBonus * viewportBonus;
+      
+      if (totalScore > bestScore || !bestConfig) {
         bestScore = totalScore;
         bestConfig = {
           cols,
@@ -133,21 +142,26 @@ const GridLayout = (function() {
           score: totalScore
         };
       }
+      
+      // If we found a good 3-row solution that fits viewport, prefer it strongly
+      if (rows === preferredRows && (isAcceptableSize || isViableSize) && fitsViewport) {
+        bestConfig.score += 1.0; // Extra bonus
+        break; // Don't even consider more rows if 3 works well
+      }
     }
     
-    // Enhanced fallback to ensure minimum columns
-    if (!bestConfig) {
-      const cols = Math.max(minCols, Math.floor(viewport.width / (minCellWidth * 0.7)));
-      const effectiveItems = isMobile ? totalItems + 1 : totalItems;
-      const rows = Math.ceil(effectiveItems / cols);
+    // Fallback: if no good solution found, force fit to viewport
+    if (!bestConfig || bestConfig.cellWidth * bestConfig.cols > viewport.width) {
+      const rows = preferredRows;
+      const cols = Math.ceil(effectiveItems / rows);
       bestConfig = {
         cols,
         rows,
-        cellWidth: viewport.width / cols,
+        cellWidth: viewport.width / cols, // Force fit to viewport
         cellHeight: viewport.height / rows,
         cellRatio: (viewport.width / cols) / (viewport.height / rows),
         totalItems: effectiveItems,
-        score: 0
+        score: 0.5 // Lower score indicates forced fit
       };
     }
     
@@ -173,18 +187,56 @@ const GridLayout = (function() {
     
     if (!layout) return;
     
+    // Get current CSS grid layout
+    const currentColsStyle = getComputedStyle(gridContainer).gridTemplateColumns;
+    const currentRowsStyle = getComputedStyle(gridContainer).gridTemplateRows;
+    const currentCols = currentColsStyle.split(' ').length;
+    const currentRows = currentRowsStyle.split(' ').length;
+    
+    // Check if we need to update the grid
+    const needsGridUpdate = currentCols !== layout.cols || currentRows !== layout.rows;
+    const isLayoutSignificantlyDifferent = Math.abs(currentCols - layout.cols) > 1 || 
+                                          Math.abs(currentRows - layout.rows) > 1;
+    
+    // Only update if necessary and it would be a significant improvement
+    if (!needsGridUpdate && !window.forceGridUpdate) {
+      // Grid is already correctly sized, no need to update
+      console.log('Grid layout is already optimal, preventing unnecessary update');
+      currentLayout = layout;
+      return;
+    }
+    
+    // For minor adjustments (within 1 row/col), only update if it's a clear improvement
+    if (!isLayoutSignificantlyDifferent && layout.score < 1.5 && !window.forceGridUpdate) {
+      console.log('Layout change is minor and not significantly better, maintaining current layout');
+      currentLayout = {
+        cols: currentCols,
+        rows: currentRows,
+        cellWidth: window.innerWidth / currentCols,
+        cellHeight: window.innerHeight / currentRows,
+        cellRatio: (window.innerWidth / currentCols) / (window.innerHeight / currentRows),
+        totalItems: totalItems,
+        score: 1
+      };
+      return;
+    }
+    
     // Store current layout
     currentLayout = layout;
+    
+    console.log(`Applying grid layout: ${layout.cols} cols × ${layout.rows} rows for ${projects.length} projects`);
     
     // Apply CSS Grid styles
     gridContainer.style.gridTemplateColumns = `repeat(${layout.cols}, 1fr)`;
     gridContainer.style.gridTemplateRows = `repeat(${layout.rows}, 1fr)`;
     
-    // Reset all grid positions first
+    // Reset all grid positions first (except contact cell which is positioned by CSS)
     const allItems = Array.from(gridContainer.children);
     allItems.forEach(item => {
-      item.style.gridRow = '';
-      item.style.gridColumn = '';
+      if (!item.classList.contains('contact-cell')) {
+        item.style.gridRow = '';
+        item.style.gridColumn = '';
+      }
     });
     
     // Calculate contact cell position and spanning
@@ -193,14 +245,14 @@ const GridLayout = (function() {
     // Only span 2 columns on mobile, single column on desktop
     const contactColSpan = isMobile ? Math.min(2, layout.cols) : 1;
     
-    // Position contact cell first
+    // Update contact cell positioning if needed
     const contactCell = gridContainer.querySelector('.contact-cell');
     if (contactCell) {
       contactCell.style.gridRow = contactRow;
       if (isMobile && contactColSpan > 1) {
         contactCell.style.gridColumn = `${contactCol} / ${contactCol + contactColSpan}`;
       } else {
-      contactCell.style.gridColumn = contactCol;
+        contactCell.style.gridColumn = contactCol;
       }
     }
     
@@ -230,12 +282,12 @@ const GridLayout = (function() {
       }
     }
     
-    // Handle incomplete last row - expand items to fill space
+    // Handle incomplete last row - expand contact cell to fill space and push projects right
     expandLastRowItems(layout, projects.length, contactColSpan, isMobile);
   }
   
   /**
-   * Expand items in the last row to fill available space
+   * Expand contact cell in the last row to fill available space, pushing projects to the right
    * @param {Object} layout - Grid layout configuration  
    * @param {number} projectCount - Number of projects
    * @param {number} contactColSpan - Number of columns the contact cell spans
@@ -244,49 +296,45 @@ const GridLayout = (function() {
   function expandLastRowItems(layout, projectCount, contactColSpan, isMobile) {
     const { cols, rows } = layout;
     
-    // Find items in the last row (excluding contact cell)
+    // Find project items in the last row (excluding contact cell)
     const projectItems = Array.from(gridContainer.children).filter(item => 
       !item.classList.contains('contact-cell')
     );
     
-    let lastRowItems = [];
+    let lastRowProjectItems = [];
     
     projectItems.forEach((item) => {
       const row = parseInt(item.style.gridRow);
       if (row === rows) {
-        lastRowItems.push(item);
+        lastRowProjectItems.push(item);
       }
     });
     
-    // If last row has items and they don't fill the row completely
-    if (lastRowItems.length > 0) {
-      // Check if contact cell is in the last row
+    // If last row has project items and there's leftover space
+    if (lastRowProjectItems.length > 0) {
+      const contactCell = gridContainer.querySelector('.contact-cell');
       const contactInLastRow = rows === layout.rows;
-      // Account for contact cell spanning multiple columns (only on mobile)
-      const availableColsInLastRow = contactInLastRow ? cols - contactColSpan : cols;
       
-      if (lastRowItems.length < availableColsInLastRow) {
-        // Calculate how much space each item should take
-        const colsPerItem = availableColsInLastRow / lastRowItems.length;
+      if (contactInLastRow && contactCell) {
+        // Calculate how many columns are actually used by projects in last row
+        const projectsInLastRow = lastRowProjectItems.length;
+        const totalUsedCols = projectsInLastRow + 1; // +1 for contact cell minimum
         
-        lastRowItems.forEach((item, index) => {
-          let startCol, endCol;
+        if (totalUsedCols < cols) {
+          // There's leftover space - expand contact cell to fill it
+          const leftoverCols = cols - projectsInLastRow;
           
-          if (contactInLastRow) {
-            // Contact cell takes first contactColSpan columns, so start from column (contactColSpan + 1)
-            startCol = Math.floor(index * colsPerItem) + contactColSpan + 1;
-            endCol = Math.floor((index + 1) * colsPerItem) + contactColSpan + 1;
-          } else {
-            // No contact cell in this row
-            startCol = Math.floor(index * colsPerItem) + 1;
-            endCol = Math.floor((index + 1) * colsPerItem) + 1;
-          }
+          // Expand contact cell to take up leftover space
+          contactCell.style.gridColumn = `1 / ${leftoverCols + 1}`;
           
-          // Ensure we don't exceed the grid
-          endCol = Math.min(endCol, cols + 1);
+          // Position project items to the right, starting after the expanded contact cell
+          lastRowProjectItems.forEach((item, index) => {
+            const projectCol = leftoverCols + 1 + index;
+            item.style.gridColumn = projectCol;
+          });
           
-          item.style.gridColumn = `${startCol} / ${endCol}`;
-        });
+          console.log(`Expanded contact cell to span ${leftoverCols} columns, pushing ${projectsInLastRow} projects to the right`);
+        }
       }
     }
   }
