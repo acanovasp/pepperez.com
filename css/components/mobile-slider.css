@@ -1,0 +1,564 @@
+/*
+   Mobile Slider Component
+   Vertical slider layout for mobile devices
+*/
+
+/* Hide the desktop grid on mobile and show slider instead */
+@media (max-width: 768px) {
+  /* Hide desktop grid */
+  .projects-grid {
+    display: none;
+  }
+  
+  /* Hide desktop image overlay */
+  .image-overlay {
+    display: none;
+  }
+  
+  /* Mobile slider container */
+  .mobile-slider {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    z-index: 5;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+  
+  /* Individual slide - only contains the image */
+  .mobile-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease-out;
+  }
+  
+  /* Project image in center */
+  .mobile-slide-image {
+    max-width: 90vw;
+    max-height: 60vh;
+    object-fit: contain;
+    z-index: 10;
+  }
+  
+  /* Fixed project info elements that update dynamically */
+  .mobile-project-id {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+  }
+  
+  .mobile-view-project {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    text-decoration: none;
+    z-index: 20;
+    mix-blend-mode: difference;
+    cursor: pointer;
+  }
+  
+  .mobile-project-title {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+    text-align: right;
+  }
+  
+  .mobile-contact {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+  }
+  
+  .mobile-contact .photographer-name {
+    margin-bottom: 0.75rem;
+  }
+  
+  .mobile-contact .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .mobile-contact a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  /* Slide positions for navigation */
+  .mobile-slide.current {
+    transform: translateY(0);
+  }
+  
+  .mobile-slide.next {
+    transform: translateY(100vh);
+  }
+  
+  .mobile-slide.prev {
+    transform: translateY(-100vh);
+  }
+  
+  /* Touch indicators */
+  .mobile-slider::before {
+    content: '';
+    position: absolute;
+    bottom: 50%;
+    right: 10px;
+    width: 2px;
+    height: 40px;
+    background: #383838;
+    opacity: 0.3;
+    z-index: 30;
+    mix-blend-mode: difference;
+  }
+}
+
+/* Smaller screens adjustments */
+@media (max-width: 480px) {
+  .mobile-project-id {
+    top: 20px;
+    left: 20px;
+  }
+  
+  .mobile-view-project {
+    top: 20px;
+    right: 20px;
+  }
+  
+  .mobile-project-title {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .mobile-contact {
+    bottom: 20px;
+    left: 20px;
+  }
+  
+  .mobile-slide-image {
+    max-height: 50vh;
+    max-width: 95vw;
+  }
+} 
+
+/* Mobile Project Page Layout */
+@media (max-width: 768px) {
+  .project-page .projects-grid,
+  .project-page .slideshow-container {
+    display: none;
+  }
+  
+  /* Mobile project layout - similar to mobile slider */
+  .project-page .mobile-project-layout {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    z-index: 5;
+    overflow: hidden;
+  }
+  
+  /* Fixed UI elements for mobile project page */
+  .project-page .mobile-project-id {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+  }
+  
+  .project-page .mobile-close-button {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .project-page .mobile-gallery-button {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    mix-blend-mode: difference;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .project-page .mobile-project-title {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+    text-align: right;
+  }
+  
+  .project-page .mobile-contact {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+  }
+  
+  .project-page .mobile-contact .photographer-name {
+    margin-bottom: 0.75rem;
+  }
+  
+  .project-page .mobile-contact .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .project-page .mobile-contact a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  /* Mobile slideshow container - center content */
+  .project-page .mobile-slideshow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  
+  .project-page .mobile-slideshow-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .project-page .mobile-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .project-page .mobile-slide.active {
+    opacity: 1;
+  }
+  
+  .project-page .mobile-slide img {
+    max-height: 60vh;
+    max-width: 90vw;
+    object-fit: contain;
+  }
+  
+  /* Touch/click areas for navigation */
+  .project-page .mobile-slideshow-nav-area {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 15;
+    background: transparent;
+  }
+  
+  .project-page .mobile-slideshow-nav-area.prev {
+    left: 0;
+  }
+  
+  .project-page .mobile-slideshow-nav-area.next {
+    right: 0;
+  }
+}
+
+/* Smaller screens adjustments for project page */
+@media (max-width: 480px) {
+  .project-page .mobile-project-id {
+    top: 20px;
+    left: 20px;
+  }
+  
+  .project-page .mobile-close-button {
+    top: 20px;
+    right: 20px;
+  }
+  
+  .project-page .mobile-gallery-button {
+    top: 20px;
+  }
+  
+  .project-page .mobile-project-title {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .project-page .mobile-contact {
+    bottom: 20px;
+    left: 20px;
+  }
+  
+  .project-page .mobile-slide img {
+    max-height: 50vh;
+    max-width: 95vw;
+  }
+  
+  .project-page .mobile-project-info {
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+  }
+} 
+
+/* Mobile project info container */
+.project-page .mobile-project-info {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  right: 30px;
+  z-index: 20;
+  mix-blend-mode: difference;
+}
+
+.project-page .mobile-project-info .info-top-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.project-page .mobile-project-info .project-title-in-info {
+  text-align: right;
+  cursor: pointer;
+}
+
+.project-page .mobile-project-info .project-description {
+  line-height: 1.4;
+  margin: 0;
+  width: 100%;
+}
+
+/* Mobile info toggle indicator */
+.project-page .mobile-info-toggle {
+  margin-left: 0.5rem;
+}
+
+/* Reduce slideshow opacity when project info is visible */
+.project-page.project-info-visible .mobile-slideshow-container {
+  opacity: 0.1;
+  transition: opacity 0.3s ease;
+}
+
+/* Mobile slideshow counter */
+.project-page .mobile-slideshow-counter {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 25;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+/* Mobile Gallery Page Layout */
+@media (max-width: 768px) {
+  .gallery-page .projects-grid {
+    display: none;
+  }
+  
+  /* Fixed UI elements for mobile gallery page */
+  .gallery-page .mobile-project-id {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+  }
+  
+  .gallery-page .mobile-close-button {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .gallery-page .mobile-gallery-button {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    mix-blend-mode: difference;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .gallery-page .mobile-project-title {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+    text-align: right;
+  }
+  
+  .gallery-page .mobile-contact {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+  }
+  
+  .gallery-page .mobile-contact .photographer-name {
+    margin-bottom: 0.75rem;
+  }
+  
+  .gallery-page .mobile-contact .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .gallery-page .mobile-contact a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  /* Mobile project info container for gallery */
+  .gallery-page .mobile-project-info {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
+    z-index: 20;
+    mix-blend-mode: difference;
+  }
+  
+  .gallery-page .mobile-project-info .info-top-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .gallery-page .mobile-project-info .project-title-in-info {
+    flex: 0 0 48%;
+    margin: 0;
+    text-align: right;
+    font-size: inherit;
+    font-weight: normal;
+    cursor: pointer;
+  }
+  
+  .gallery-page .mobile-project-info .project-metadata {
+    flex: 0 0 48%;
+    margin: 0;
+  }
+  
+  .gallery-page .mobile-project-info .metadata-item {
+    margin-bottom: 0.25rem;
+  }
+  
+  .gallery-page .mobile-project-info .metadata-item .label {
+    font-weight: normal;
+  }
+  
+  .gallery-page .mobile-project-info .project-description {
+    line-height: 1.4;
+    margin: 0;
+    width: 100%;
+  }
+  
+  /* Mobile info toggle indicator for gallery */
+  .gallery-page .mobile-info-toggle {
+    margin-left: 0.5rem;
+  }
+  
+  /* Reduce gallery grid opacity when project info is visible */
+  .gallery-page.project-info-visible .gallery-grid {
+    opacity: 0.1;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Reduce lightbox opacity when project info is visible */
+  .gallery-page.project-info-visible .lightbox {
+    opacity: 0.1;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Mobile gallery counter */
+  .gallery-page .mobile-gallery-counter {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 25;
+    mix-blend-mode: difference;
+    pointer-events: none;
+  }
+}
+
+/* Smaller screens adjustments for gallery page */
+@media (max-width: 480px) {
+  .gallery-page .mobile-project-id {
+    top: 20px;
+    left: 20px;
+  }
+  
+  .gallery-page .mobile-close-button {
+    top: 20px;
+    right: 20px;
+  }
+  
+  .gallery-page .mobile-gallery-button {
+    top: 20px;
+  }
+  
+  .gallery-page .mobile-project-title {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .gallery-page .mobile-contact {
+    bottom: 20px;
+    left: 20px;
+  }
+  
+  .gallery-page .mobile-project-info {
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+  }
+} 

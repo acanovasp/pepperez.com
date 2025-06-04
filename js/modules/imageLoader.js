@@ -41,8 +41,8 @@ const ImageLoader = (function() {
             if (img.dataset.src) {
               // Use requestAnimationFrame for non-blocking image loading
               requestAnimationFrame(() => {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
+              img.src = img.dataset.src;
+              img.removeAttribute('data-src');
               });
             }
             
@@ -287,7 +287,7 @@ const ImageLoader = (function() {
       images: template.images.map(imagePath => fixImagePath(imagePath))
     }));
   }
-
+  
   /**
    * Check if an image is already loaded
    * @param {string} imagePath - Path to the image

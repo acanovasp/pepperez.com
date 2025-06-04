@@ -56,18 +56,11 @@ const Gallery = (function() {
     // Use document fragment for better performance
     const fragment = document.createDocumentFragment();
     
-    // Pre-calculate gallery item dimensions to prevent layout shifts
-    const itemHeight = 200; // Fixed height from CSS
-    
     // Create a gallery item for each image
     imagePaths.forEach((imagePath, index) => {
       const galleryItem = document.createElement('div');
       galleryItem.classList.add('gallery-item');
       galleryItem.dataset.index = index;
-      
-      // Set explicit dimensions to prevent layout shifts
-      galleryItem.style.height = `${itemHeight}px`;
-      galleryItem.style.minWidth = '150px';
       
       const img = document.createElement('img');
       img.classList.add('gallery-image', 'loading');
@@ -76,11 +69,6 @@ const Gallery = (function() {
       img.alt = `Gallery image ${index + 1}`;
       img.loading = 'lazy'; // Keep native lazy loading as fallback
       img.decoding = 'async'; // Better performance
-      
-      // Pre-set image dimensions to prevent layout shifts
-      img.style.height = `${itemHeight}px`;
-      img.style.width = 'auto';
-      img.style.objectFit = 'contain';
       
       // Add load event listener for fade-in effect
       img.addEventListener('load', function() {
@@ -124,7 +112,7 @@ const Gallery = (function() {
       // Add click event to open lightbox - only if image is loaded
       galleryItem.addEventListener('click', () => {
         if (img.classList.contains('loaded')) {
-          openLightbox(index);
+        openLightbox(index);
         }
       }, { passive: true });
     });

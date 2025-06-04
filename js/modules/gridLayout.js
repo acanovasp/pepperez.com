@@ -26,9 +26,9 @@ const GridLayout = (function() {
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        if (projectsData.length > 0) {
-          applyLayout(projectsData);
-        }
+      if (projectsData.length > 0) {
+        applyLayout(projectsData);
+      }
       }, 100); // Faster response than 250ms
     }, { passive: true });
     
@@ -234,8 +234,8 @@ const GridLayout = (function() {
     const allItems = Array.from(gridContainer.children);
     allItems.forEach(item => {
       if (!item.classList.contains('contact-cell')) {
-        item.style.gridRow = '';
-        item.style.gridColumn = '';
+      item.style.gridRow = '';
+      item.style.gridColumn = '';
       }
     });
     
@@ -252,7 +252,7 @@ const GridLayout = (function() {
       if (isMobile && contactColSpan > 1) {
         contactCell.style.gridColumn = `${contactCol} / ${contactCol + contactColSpan}`;
       } else {
-        contactCell.style.gridColumn = contactCol;
+      contactCell.style.gridColumn = contactCol;
       }
     }
     

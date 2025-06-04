@@ -92,25 +92,25 @@ function initApp() {
   
   // Pre-optimize critical rendering path
   requestAnimationFrame(() => {
-    // Determine current page and initialize appropriate modules
-    const currentPath = window.location.pathname;
-    
-    if (currentPath.endsWith('index.html') || currentPath.endsWith('/')) {
-      // Homepage
-      initHomepage();
-    } else if (currentPath.includes('project.html')) {
-      // Project page
-      initProjectPage();
-    } else if (currentPath.includes('gallery.html')) {
-      // Gallery page
-      initGalleryPage();
-    }
+  // Determine current page and initialize appropriate modules
+  const currentPath = window.location.pathname;
+  
+  if (currentPath.endsWith('index.html') || currentPath.endsWith('/')) {
+    // Homepage
+    initHomepage();
+  } else if (currentPath.includes('project.html')) {
+    // Project page
+    initProjectPage();
+  } else if (currentPath.includes('gallery.html')) {
+    // Gallery page
+    initGalleryPage();
+  }
     
     // Remove shift prevention after initialization
     setTimeout(() => {
       document.documentElement.style.removeProperty('--prevent-shifts');
     }, 100);
-  });
+});
 }
 
 /**
@@ -136,6 +136,9 @@ function initHomepage() {
   // Apply the fullscreen grid layout immediately
   GridLayout.applyLayout(projects);
   
+  // Initialize mobile slider for mobile devices
+  MobileSlider.init(projects);
+  
   // Dispatch projects loaded event for grid layout optimization
   document.dispatchEvent(new CustomEvent('projectsLoaded', {
     detail: { projects: projects }
@@ -143,7 +146,7 @@ function initHomepage() {
   
   // Initialize image loader for thumbnails with slight delay to prevent blocking
   requestAnimationFrame(() => {
-    ImageLoader.lazyLoadImages('.project-thumbnail');
+  ImageLoader.lazyLoadImages('.project-thumbnail');
   });
 }
 
@@ -217,6 +220,13 @@ function initProjectPage() {
     return;
   }
   
+  // Initialize mobile project layout for mobile devices
+  if (window.innerWidth <= 768) {
+    MobileProject.init(project);
+    return; // Skip desktop initialization on mobile
+  }
+  
+  // Desktop initialization
   // Initialize static grid layout manager for project page
   const projectsGrid = document.querySelector('.projects-grid');
   if (projectsGrid) {
@@ -305,6 +315,13 @@ function initGalleryPage() {
     return;
   }
   
+  // Initialize mobile gallery layout for mobile devices
+  if (window.innerWidth <= 768) {
+    MobileGallery.init(project);
+    // Continue with gallery initialization for mobile (keep the grid)
+  }
+  
+  // Desktop and mobile gallery initialization
   // Pre-optimize gallery container to prevent layout shifts
   const galleryContainer = document.querySelector('.gallery-grid');
   if (galleryContainer) {
@@ -315,36 +332,42 @@ function initGalleryPage() {
   
   // Batch DOM updates for better performance
   requestAnimationFrame(() => {
-    // Initialize static grid layout manager for gallery page
-    const projectsGrid = document.querySelector('.projects-grid');
-    if (projectsGrid) {
-      GridLayout.init('.projects-grid');
-      
-      // Render static projects grid (contact cell is already in HTML)
-      const fragment = document.createDocumentFragment();
-      projects.forEach(proj => {
-        const projectElement = createStaticProjectElement(proj, proj.id === projectId);
-        fragment.appendChild(projectElement);
-      });
-      projectsGrid.appendChild(fragment);
-      
-      // Apply the fullscreen grid layout
-      GridLayout.applyLayout(projects);
+    // Initialize static grid layout manager for gallery page (desktop only)
+    if (window.innerWidth > 768) {
+      const projectsGrid = document.querySelector('.projects-grid');
+      if (projectsGrid) {
+        GridLayout.init('.projects-grid');
+        
+        // Render static projects grid (contact cell is already in HTML)
+        const fragment = document.createDocumentFragment();
+        projects.forEach(proj => {
+          const projectElement = createStaticProjectElement(proj, proj.id === projectId);
+          fragment.appendChild(projectElement);
+        });
+        projectsGrid.appendChild(fragment);
+        
+        // Apply the fullscreen grid layout
+        GridLayout.applyLayout(projects);
+      }
     }
-    
-    // Update page title
-    document.title = `All Images - ${project.title} | Photographer Portfolio`;
-    
-    // Batch metadata updates
-    updateGalleryMetadata(project, projectId);
+  
+  // Update page title
+  document.title = `All Images - ${project.title} | Photographer Portfolio`;
+  
+    // Batch metadata updates (desktop only)
+    if (window.innerWidth > 768) {
+      updateGalleryMetadata(project, projectId);
+    }
     
     // Get all gallery images
     const galleryImages = ImageLoader.getGalleryImagePaths(project);
     
-    // Update the slideshow counter in the active project cell to show total gallery images
-    const projectCounter = document.querySelector('.project-slideshow-counter');
-    if (projectCounter && galleryImages.length > 0) {
-      projectCounter.textContent = `${galleryImages.length} / ${galleryImages.length}`;
+    // Update the slideshow counter in the active project cell to show total gallery images (desktop only)
+    if (window.innerWidth > 768) {
+      const projectCounter = document.querySelector('.project-slideshow-counter');
+      if (projectCounter && galleryImages.length > 0) {
+        projectCounter.textContent = `${galleryImages.length} / ${galleryImages.length}`;
+      }
     }
     
     // Initialize gallery with all project images using optimized loading
@@ -362,8 +385,24 @@ function initGalleryPage() {
       console.error('Cannot initialize gallery. Container:', galleryContainer, 'Images:', galleryImages.length);
     }
     
-    // Initialize project info toggle functionality
-    initProjectInfoToggle();
+    // Initialize project info toggle functionality (desktop only)
+    if (window.innerWidth > 768) {
+      initProjectInfoToggle();
+    }
+    
+    // Handle window resize for gallery page
+    window.addEventListener('resize', handleGalleryResize);
+    
+    function handleGalleryResize() {
+      // Clean up mobile gallery if switching to desktop
+      if (window.innerWidth > 768 && typeof MobileGallery !== 'undefined') {
+        MobileGallery.destroy();
+      }
+      // Reinitialize mobile gallery if switching to mobile
+      else if (window.innerWidth <= 768 && typeof MobileGallery !== 'undefined') {
+        MobileGallery.init(project);
+      }
+    }
   });
 }
 
@@ -437,7 +476,7 @@ function createStaticProjectElement(project, isActive = false) {
     counterElement.classList.add('project-slideshow-counter');
     counterElement.textContent = '1 / 0'; // Will be updated by slideshow
     projectElement.appendChild(counterElement);
-    
+  
     // Add click handler to open gallery for active project
     projectElement.addEventListener('click', () => {
       Navigation.goToGallery(project.id);

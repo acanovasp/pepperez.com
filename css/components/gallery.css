@@ -192,6 +192,7 @@
   
   .gallery-item {
     height: 150px;
+    min-width: 0;
   }
   
   .gallery-image {
@@ -206,7 +207,7 @@
 @media (max-width: 480px) {
   .gallery-grid {
     padding: 30px;
-    gap: 30px;
+    gap: 50px;
   }
   
   .gallery-item {

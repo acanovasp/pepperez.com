@@ -157,8 +157,4 @@
     padding-bottom: 100%; /* Square aspect ratio on mobile */
   }
   
-  .project-metadata {
-    flex-direction: column;
-    gap: var(--space-xs);
-  }
 } 
