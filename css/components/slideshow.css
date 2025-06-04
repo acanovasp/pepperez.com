@@ -27,7 +27,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,7 +61,7 @@
 
 /* Default slide layout (fallback) */
 .slide img {
-  max-height: 70vh;
+  max-height: 70dvh;
   max-width: 90vw;
   object-fit: contain;
 }
@@ -73,7 +73,7 @@
 
 .slide.slide-fullscreen img {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   max-width: none;
   max-height: none;
   object-fit: cover;
@@ -81,15 +81,15 @@
 
 /* Main slide template (70vh like homepage) */
 .slide.slide-main img {
-  max-height: 70vh;
+  max-height: 70dvh;
   max-width: 90vw;
   object-fit: contain;
 }
 
 /* Full height slide template (100vh but contained) */
 .slide.slide-fullheight img {
-  height: 100vh;
-  max-height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   object-fit: contain;
 }
 
@@ -102,7 +102,7 @@
 }
 
 .slide.slide-diptych img {
-  max-height: 70vh;
+  max-height: 70dvh;
   max-width: 45vw;
   object-fit: contain;
   flex: 1;
@@ -116,7 +116,7 @@
   }
   
   .slide.slide-diptych img {
-    max-height: 35vh;
+    max-height: 35dvh;
     max-width: 90vw;
   }
 }

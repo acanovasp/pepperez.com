@@ -44,14 +44,14 @@ header {
   top: 30px;
   left: 30px;
   width: calc(100vw - 60px);
-  height: calc(100vh - 60px);
+  height: calc(100dvh - 60px);
   display: grid;
   gap: 42px;
   /* Flexible grid that adapts to content - no fixed minimums to prevent overflow */
   grid-template-rows: repeat(3, 1fr);
   grid-template-columns: repeat(auto-fit, 1fr);
   /* Ensure grid fits within viewport with margin */
-  min-height: calc(100vh - 60px);
+  min-height: calc(100dvh - 60px);
   min-width: calc(100vw - 60px);
   background: transparent;
   z-index: 10;
@@ -146,7 +146,7 @@ body:not(.project-page):not(.gallery-page) .project-item {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
