@@ -9,11 +9,8 @@ const MobileSlider = (function() {
   let slides = [];
   let currentSlideIndex = 0;
   let isTransitioning = false;
-  let startY = 0;
-  let currentY = 0;
-  let isDragging = false;
-  let minSwipeDistance = 50;
   let projects = [];
+  let navigation;
   
   // Fixed UI elements
   let projectIdElement;
@@ -41,11 +38,8 @@ const MobileSlider = (function() {
     // Create slides for projects only (images)
     createSlides(projects);
     
-    // Setup touch events
-    setupTouchEvents();
-    
-    // Setup keyboard navigation
-    setupKeyboardEvents();
+    // Setup unified navigation
+    setupUnifiedNavigation();
     
     // Initialize first slide
     updateSlidePositions();
@@ -146,6 +140,24 @@ const MobileSlider = (function() {
   }
   
   /**
+   * Setup unified navigation system
+   */
+  function setupUnifiedNavigation() {
+    if (!sliderContainer) return;
+    
+    navigation = UnifiedNavigation.setupNavigation(sliderContainer, {
+      onPrev: goToPrevSlide,
+      onNext: goToNextSlide
+    }, {
+      enableSwipe: true,
+      enableClick: true,
+      enableKeyboard: true,
+      swipeDirection: 'vertical',
+      swipeThreshold: 50
+    });
+  }
+  
+  /**
    * Update UI content based on current slide
    */
   function updateUIContent() {
@@ -156,177 +168,6 @@ const MobileSlider = (function() {
       projectTitleElement.textContent = currentProject.title;
       viewProjectElement.href = `templates/project.html?project=${currentProject.id}`;
     }
-  }
-  
-  /**
-   * Setup touch event listeners
-   */
-  function setupTouchEvents() {
-    sliderContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
-    sliderContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
-    sliderContainer.addEventListener('touchend', handleTouchEnd, { passive: false });
-    
-    // Mouse events for desktop testing
-    sliderContainer.addEventListener('mousedown', handleMouseDown);
-    sliderContainer.addEventListener('mousemove', handleMouseMove);
-    sliderContainer.addEventListener('mouseup', handleMouseUp);
-    
-    // Add click navigation to go to next slide
-    sliderContainer.addEventListener('click', handleClick);
-  }
-  
-  /**
-   * Setup keyboard event listeners
-   */
-  function setupKeyboardEvents() {
-    document.addEventListener('keydown', handleKeyDown);
-  }
-  
-  /**
-   * Handle touch start
-   */
-  function handleTouchStart(e) {
-    if (isTransitioning) return;
-    
-    startY = e.touches[0].clientY;
-    currentY = startY;
-    isDragging = true;
-    
-    // Prevent default scrolling
-    e.preventDefault();
-  }
-  
-  /**
-   * Handle touch move
-   */
-  function handleTouchMove(e) {
-    if (!isDragging || isTransitioning) return;
-    
-    currentY = e.touches[0].clientY;
-    const deltaY = currentY - startY;
-    
-    // Apply drag effect to current slide
-    const currentSlide = slides[currentSlideIndex];
-    if (currentSlide) {
-      currentSlide.style.transform = `translateY(${deltaY}px)`;
-    }
-    
-    // Prevent default scrolling
-    e.preventDefault();
-  }
-  
-  /**
-   * Handle touch end
-   */
-  function handleTouchEnd(e) {
-    if (!isDragging || isTransitioning) return;
-    
-    const deltaY = currentY - startY;
-    const absDeltaY = Math.abs(deltaY);
-    
-    isDragging = false;
-    
-    // Reset current slide transform
-    const currentSlide = slides[currentSlideIndex];
-    if (currentSlide) {
-      currentSlide.style.transform = '';
-    }
-    
-    // Check if swipe distance is sufficient
-    if (absDeltaY > minSwipeDistance) {
-      if (deltaY > 0) {
-        // Swiped down - go to previous slide
-        goToPrevSlide();
-      } else {
-        // Swiped up - go to next slide
-        goToNextSlide();
-      }
-    }
-    
-    // Prevent default
-    e.preventDefault();
-  }
-  
-  /**
-   * Handle mouse events for desktop testing
-   */
-  function handleMouseDown(e) {
-    if (isTransitioning) return;
-    
-    startY = e.clientY;
-    currentY = startY;
-    isDragging = true;
-    
-    e.preventDefault();
-  }
-  
-  function handleMouseMove(e) {
-    if (!isDragging || isTransitioning) return;
-    
-    currentY = e.clientY;
-    const deltaY = currentY - startY;
-    
-    const currentSlide = slides[currentSlideIndex];
-    if (currentSlide) {
-      currentSlide.style.transform = `translateY(${deltaY}px)`;
-    }
-    
-    e.preventDefault();
-  }
-  
-  function handleMouseUp(e) {
-    if (!isDragging || isTransitioning) return;
-    
-    const deltaY = currentY - startY;
-    const absDeltaY = Math.abs(deltaY);
-    
-    isDragging = false;
-    
-    const currentSlide = slides[currentSlideIndex];
-    if (currentSlide) {
-      currentSlide.style.transform = '';
-    }
-    
-    if (absDeltaY > minSwipeDistance) {
-      if (deltaY > 0) {
-        goToPrevSlide();
-      } else {
-        goToNextSlide();
-      }
-    }
-    
-    e.preventDefault();
-  }
-  
-  /**
-   * Handle keyboard navigation
-   */
-  function handleKeyDown(e) {
-    if (isTransitioning) return;
-    
-    switch (e.key) {
-      case 'ArrowUp':
-        goToPrevSlide();
-        e.preventDefault();
-        break;
-      case 'ArrowDown':
-        goToNextSlide();
-        e.preventDefault();
-        break;
-    }
-  }
-  
-  /**
-   * Handle click to go to next slide
-   */
-  function handleClick(e) {
-    // Prevent click during transitions or dragging
-    if (isTransitioning || isDragging) return;
-    
-    // Go to next slide
-    goToNextSlide();
-    
-    e.preventDefault();
   }
   
   /**
@@ -404,12 +245,33 @@ const MobileSlider = (function() {
     }
   }
   
+  /**
+   * Cleanup function
+   */
+  function destroy() {
+    // Destroy unified navigation
+    if (navigation) {
+      navigation.destroy();
+    }
+    
+    // Remove resize listener
+    window.removeEventListener('resize', handleResize);
+    
+    // Remove DOM elements
+    if (sliderContainer) sliderContainer.remove();
+    if (projectIdElement) projectIdElement.remove();
+    if (viewProjectElement) viewProjectElement.remove();
+    if (projectTitleElement) projectTitleElement.remove();
+    if (contactElement) contactElement.remove();
+  }
+  
   // Setup resize listener
   window.addEventListener('resize', handleResize);
   
   // Public API
   return {
     init,
+    destroy,
     goToNextSlide,
     goToPrevSlide,
     getCurrentSlideIndex: () => currentSlideIndex

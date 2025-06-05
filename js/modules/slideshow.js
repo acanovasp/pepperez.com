@@ -29,26 +29,18 @@ const Slideshow = (function() {
       return;
     }
     
-    // Get counter elements (for backwards compatibility)
-    currentSlideElement = document.getElementById('current-slide');
-    totalSlidesElement = document.getElementById('total-slides');
-    
-    // Get project counter element in project cell
+    // Store references to counter elements if they exist
+    currentSlideElement = document.querySelector('.current-slide');
     projectCounter = document.querySelector('.project-slideshow-counter');
     
-    // Create slides from templates or fallback to simple images
+    // Create slides based on slide templates or image paths
     if (slideTemplates && slideTemplates.length > 0) {
       createSlidesFromTemplates(slideTemplates);
     } else {
-    createSlides(imagePaths);
+      createSlides(imagePaths);
     }
     
-    // Set total slides count
-    if (totalSlidesElement) {
-      totalSlidesElement.textContent = slides.length;
-    }
-    
-    // Set total in project counter
+    // Set initial project counter
     if (projectCounter) {
       projectCounter.textContent = `1 / ${slides.length}`;
     }
@@ -60,17 +52,8 @@ const Slideshow = (function() {
       console.error('No slides created!');
     }
     
-    // Attach event listeners to navigation areas
-    const prevArea = document.querySelector('.slideshow-nav-area.prev');
-    const nextArea = document.querySelector('.slideshow-nav-area.next');
-    
-    if (prevArea) {
-      prevArea.addEventListener('click', prev);
-    }
-    
-    if (nextArea) {
-      nextArea.addEventListener('click', next);
-    }
+    // Setup navigation areas for desktop slideshow
+    setupDesktopNavigation();
     
     // Add keyboard navigation
     document.addEventListener('keydown', handleKeyPress);
@@ -80,12 +63,45 @@ const Slideshow = (function() {
   }
   
   /**
+   * Setup desktop navigation areas
+   */
+  function setupDesktopNavigation() {
+    // Get the wrapper element (or use container as fallback)
+    const slideshowWrapper = slideshowContainer.querySelector('.slideshow-wrapper') || slideshowContainer;
+    
+    // Create navigation areas if they don't exist (for desktop)
+    let prevArea = slideshowWrapper.querySelector('.slideshow-nav-area.prev');
+    let nextArea = slideshowWrapper.querySelector('.slideshow-nav-area.next');
+    
+    if (!prevArea) {
+      prevArea = document.createElement('div');
+      prevArea.classList.add('slideshow-nav-area', 'prev');
+      prevArea.setAttribute('aria-label', 'Previous image');
+      slideshowWrapper.appendChild(prevArea);
+    }
+    
+    if (!nextArea) {
+      nextArea = document.createElement('div');
+      nextArea.classList.add('slideshow-nav-area', 'next');
+      nextArea.setAttribute('aria-label', 'Next image');
+      slideshowWrapper.appendChild(nextArea);
+    }
+    
+    // Attach event listeners to navigation areas
+    prevArea.addEventListener('click', prev);
+    nextArea.addEventListener('click', next);
+  }
+  
+  /**
    * Create slide elements from slide templates
    * @param {Array} slideTemplates - Array of slide template objects
    */
   function createSlidesFromTemplates(slideTemplates) {
+    // Get the wrapper element (or use container as fallback)
+    const slideContainer = slideshowContainer.querySelector('.slideshow-wrapper') || slideshowContainer;
+    
     // Clear any existing slides but preserve navigation areas
-    const existingSlides = slideshowContainer.querySelectorAll('.slide');
+    const existingSlides = slideContainer.querySelectorAll('.slide');
     existingSlides.forEach(slide => slide.remove());
     
     // Reset slides array
@@ -106,7 +122,7 @@ const Slideshow = (function() {
         slide.appendChild(img);
       });
       
-      slideshowContainer.appendChild(slide);
+      slideContainer.appendChild(slide);
       
       // Add to slides array
       slides.push(slide);
@@ -121,8 +137,11 @@ const Slideshow = (function() {
    * @param {Array} imagePaths - Array of direct image paths
    */
   function createSlides(imagePaths) {
+    // Get the wrapper element (or use container as fallback)
+    const slideContainer = slideshowContainer.querySelector('.slideshow-wrapper') || slideshowContainer;
+    
     // Clear any existing slides but preserve navigation areas
-    const existingSlides = slideshowContainer.querySelectorAll('.slide');
+    const existingSlides = slideContainer.querySelectorAll('.slide');
     existingSlides.forEach(slide => slide.remove());
     
     // Reset slides array
@@ -139,7 +158,7 @@ const Slideshow = (function() {
       img.loading = index < 2 ? 'eager' : 'lazy'; // Load first two slides eagerly
       
       slide.appendChild(img);
-      slideshowContainer.appendChild(slide);
+      slideContainer.appendChild(slide);
       
       // Add to slides array
       slides.push(slide);

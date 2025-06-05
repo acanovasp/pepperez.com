@@ -173,6 +173,12 @@ const Gallery = (function() {
     
     // Add keyboard navigation
     document.addEventListener('keydown', handleKeyPress);
+    
+    // Add vertical swipe navigation using unified navigation
+    UnifiedNavigation.addLightboxVerticalSwipe(lightbox, {
+      onPrev: prevImage,
+      onNext: nextImage
+    });
   }
   
   /**

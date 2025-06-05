@@ -183,6 +183,26 @@
   right: 0;
 }
 
+/* Unified navigation areas for vertical swipe */
+.lightbox .nav-area {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 1050;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.lightbox .nav-area.prev {
+  left: 0;
+}
+
+.lightbox .nav-area.next {
+  right: 0;
+}
+
 /* Hide the lightbox counter */
 .lightbox-counter {
   display: none;

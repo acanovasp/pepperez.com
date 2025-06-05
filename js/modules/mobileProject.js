@@ -154,17 +154,8 @@ const MobileProject = (function() {
     slideshowWrapper = document.createElement('div');
     slideshowWrapper.classList.add('mobile-slideshow-wrapper');
     
-    // Navigation areas
-    const prevArea = document.createElement('div');
-    prevArea.classList.add('mobile-slideshow-nav-area', 'prev');
-    prevArea.addEventListener('click', prevSlide);
+    // NOTE: Navigation areas are now created by the unified navigation system
     
-    const nextArea = document.createElement('div');
-    nextArea.classList.add('mobile-slideshow-nav-area', 'next');
-    nextArea.addEventListener('click', nextSlide);
-    
-    slideshowWrapper.appendChild(prevArea);
-    slideshowWrapper.appendChild(nextArea);
     slideshowContainer.appendChild(slideshowWrapper);
     mobileProjectContainer.appendChild(slideshowContainer);
     
@@ -182,84 +173,18 @@ const MobileProject = (function() {
    * Setup touch/swipe navigation for mobile slideshow
    */
   function setupTouchNavigation() {
-    let startX = 0;
-    let startY = 0;
-    let endX = 0;
-    let endY = 0;
-    let isDragging = false;
-    const minSwipeDistance = 50;
+    if (!slideshowWrapper) return;
     
-    // Touch events
-    slideshowWrapper.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      isDragging = true;
-      e.preventDefault();
-    }, { passive: false });
-    
-    slideshowWrapper.addEventListener('touchmove', (e) => {
-      if (!isDragging) return;
-      e.preventDefault();
-    }, { passive: false });
-    
-    slideshowWrapper.addEventListener('touchend', (e) => {
-      if (!isDragging) return;
-      
-      endX = e.changedTouches[0].clientX;
-      endY = e.changedTouches[0].clientY;
-      
-      const deltaX = endX - startX;
-      const deltaY = endY - startY;
-      const absDeltaX = Math.abs(deltaX);
-      const absDeltaY = Math.abs(deltaY);
-      
-      // Check if it's a horizontal swipe (more horizontal than vertical)
-      if (absDeltaX > absDeltaY && absDeltaX > minSwipeDistance) {
-        if (deltaX > 0) {
-          // Swipe right - previous slide
-          prevSlide();
-        } else {
-          // Swipe left - next slide
-          nextSlide();
-        }
-      }
-      
-      isDragging = false;
-      e.preventDefault();
-    }, { passive: false });
-    
-    // Mouse events for desktop testing
-    slideshowWrapper.addEventListener('mousedown', (e) => {
-      startX = e.clientX;
-      startY = e.clientY;
-      isDragging = true;
-      e.preventDefault();
-    });
-    
-    slideshowWrapper.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      e.preventDefault();
-    });
-    
-    slideshowWrapper.addEventListener('mouseup', (e) => {
-      if (!isDragging) return;
-      
-      endX = e.clientX;
-      endY = e.clientY;
-      
-      const deltaX = endX - startX;
-      const absDeltaX = Math.abs(deltaX);
-      
-      if (absDeltaX > minSwipeDistance) {
-        if (deltaX > 0) {
-          prevSlide();
-        } else {
-          nextSlide();
-        }
-      }
-      
-      isDragging = false;
-      e.preventDefault();
+    // Setup unified navigation with vertical swipe
+    UnifiedNavigation.setupNavigation(slideshowWrapper, {
+      onPrev: prevSlide,
+      onNext: nextSlide
+    }, {
+      enableSwipe: true,
+      enableClick: false, // We already have click areas
+      enableKeyboard: false, // We handle keyboard separately
+      swipeDirection: 'vertical', // Changed from horizontal to vertical
+      swipeThreshold: 50
     });
   }
   
