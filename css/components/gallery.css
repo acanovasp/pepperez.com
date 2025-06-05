@@ -218,33 +218,27 @@
   }
   
   .gallery-item {
-    height: 150px;
+    height: 120px;
     min-width: 0;
-    /* Ensure items don't exceed container width */
-    max-width: calc(50vw - 40px); /* 2 columns with gap */
+    max-width: calc(50vw - 40px);
   }
   
   .gallery-image {
-    height: 150px;
+    height: 120px;
   }
   
   .lightbox-image {
-    max-height: 60dvh;
+    max-width: calc(100vw - 40px);
+  }
+  
+  /* Opacity changes when project info is visible */
+  .gallery-page.project-info-visible .gallery-grid {
+    opacity: 0.1;
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-page.project-info-visible .lightbox-image {
+    opacity: 0.1;
+    transition: opacity 0.3s ease;
   }
 }
-
-@media (max-width: 480px) {
-  
-  .gallery-item {
-    height: 120px;
-  }
-  
-  .gallery-image {
-    height: 120px;
-  }
-  
-  .lightbox-image {
-    max-height: 50dvh;
-    max-width: 95vw;
-  }
-} 

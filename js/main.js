@@ -349,7 +349,7 @@ function initGalleryPage() {
         // Apply the fullscreen grid layout
         GridLayout.applyLayout(projects);
       }
-    }
+  }
   
   // Update page title
   document.title = `All Images - ${project.title} | Photographer Portfolio`;

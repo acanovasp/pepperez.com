@@ -175,15 +175,15 @@ const MobileProject = (function() {
   function setupTouchNavigation() {
     if (!slideshowWrapper) return;
     
-    // Setup unified navigation with vertical swipe
+    // Setup unified navigation with vertical swipe AND click areas
     UnifiedNavigation.setupNavigation(slideshowWrapper, {
       onPrev: prevSlide,
       onNext: nextSlide
     }, {
       enableSwipe: true,
-      enableClick: false, // We already have click areas
+      enableClick: true, // Enable click areas for mobile
       enableKeyboard: false, // We handle keyboard separately
-      swipeDirection: 'vertical', // Changed from horizontal to vertical
+      swipeDirection: 'vertical', // Vertical swipe navigation
       swipeThreshold: 50
     });
   }

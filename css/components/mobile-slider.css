@@ -1,6 +1,9 @@
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   /* Hide desktop elements when mobile slider is active */
-  .projects-grid {
+  .projects-grid,
+  .gallery-page .projects-grid,
+  .project-page .projects-grid,
+  .project-page .slideshow-container {
     display: none;
   }
 
@@ -36,14 +39,6 @@
     transition: transform 0.3s ease-out;
   }
 
-  /* Project image in center */
-  .mobile-slide-image {
-    max-width: 90vw;
-    max-height: 60dvh;
-    object-fit: contain;
-    z-index: 10;
-  }
-
   /* Slide positions for navigation */
   .mobile-slide.current {
     transform: translateY(0);
@@ -57,46 +52,33 @@
     transform: translateY(-100dvh);
   }
 
-  /* Touch indicators */
-  .mobile-slider::before {
-    content: '';
-    position: absolute;
-    bottom: 50%;
-    right: 10px;
-    width: 2px;
-    height: 40px;
-    background: #383838;
-    opacity: 0.3;
-    z-index: 30;
-    mix-blend-mode: difference;
-  }
-
   /* =============================================================================
     SHARED MOBILE UI ELEMENTS
     ============================================================================= */
 
   /* Fixed UI elements positions - used across all mobile pages */
-  .mobile-project-id {
-    position: fixed;
-    top: 30px;
-    left: 30px;
-    z-index: 20;
-    mix-blend-mode: difference;
-  }
-
+  
+  .mobile-project-id,
   .mobile-view-project,
   .mobile-close-button,
   .mobile-gallery-button {
     position: fixed;
-    top: 30px;
-    right: 30px;
+    top: 20px;
     z-index: 20;
     mix-blend-mode: difference;
     text-decoration: none;
     cursor: pointer;
   }
+  
+  .mobile-project-id {
+    left: 20px;
+  }
 
-  /* Center button (Gallery/Selection) */
+  .mobile-view-project,
+  .mobile-close-button {
+    right: 20px;
+  }
+
   .mobile-gallery-button {
     left: 50%;
     right: auto;
@@ -105,8 +87,8 @@
 
   .mobile-project-title {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 20px;
+    right: 20px;
     z-index: 20;
     mix-blend-mode: difference;
     text-align: right;
@@ -115,8 +97,8 @@
 
   .mobile-contact {
     position: fixed;
-    bottom: 30px;
-    left: 30px;
+    bottom: 20px;
+    left: 20px;
     z-index: 20;
     mix-blend-mode: difference;
   }
@@ -144,11 +126,6 @@
   /* =============================================================================
     PROJECT PAGE MOBILE LAYOUT
     ============================================================================= */
-
-  .project-page .projects-grid,
-  .project-page .slideshow-container {
-    display: none;
-  }
 
   /* Mobile project layout container */
   .project-page .mobile-project-layout {
@@ -219,10 +196,12 @@
     opacity: 1;
   }
 
-  .project-page .mobile-slide img {
-    max-height: 60dvh;
-    max-width: 90vw;
+  .project-page .mobile-slide img,
+  .mobile-slide-image {
+    max-width: calc(100vw - 40px);
+    max-height: 70dvh;
     object-fit: contain;
+    z-index: 10;
   }
 
   /* Touch/click areas for navigation */
@@ -295,10 +274,6 @@
     GALLERY PAGE MOBILE LAYOUT
     ============================================================================= */
 
-  .gallery-page .projects-grid {
-    display: none;
-  }
-
   /* Mobile gallery counter */
   .gallery-page .mobile-gallery-counter {
     position: fixed;
@@ -330,58 +305,3 @@
     right: 0;
   }
 }
-
-/* =============================================================================
-   SMALLER SCREENS (adjust spacing only)
-   ============================================================================= */
-
-/* Reduce margins on smaller screens */
-@media (max-width: 480px) {
-  .mobile-project-id,
-  .mobile-view-project,
-  .mobile-close-button {
-    top: 20px;
-  }
-  
-  .mobile-project-id {
-    left: 20px;
-  }
-  
-  .mobile-view-project,
-  .mobile-close-button {
-    right: 20px;
-  }
-  
-  .mobile-gallery-button {
-    top: 20px;
-  }
-  
-  .mobile-project-title,
-  .mobile-contact {
-    bottom: 20px;
-  }
-  
-  .mobile-project-title {
-    right: 20px;
-  }
-  
-  .mobile-contact {
-    left: 20px;
-  }
-  
-  .mobile-slide-image {
-    max-height: 50dvh;
-    max-width: 95vw;
-  }
-  
-  .project-page .mobile-slide img {
-    max-height: 50dvh;
-    max-width: 95vw;
-  }
-  
-  .mobile-project-info {
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-  }
-} 
