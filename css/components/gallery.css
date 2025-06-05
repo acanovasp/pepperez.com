@@ -3,6 +3,11 @@
    For the full image gallery/index view
 */
 
+/* Prevent horizontal overflow on gallery pages */
+.gallery-page {
+  overflow-x: hidden;
+}
+
 .gallery-page header {
   margin-bottom: var(--space-md);
 }
@@ -186,13 +191,17 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .gallery-grid {
-    padding: 20px;
-    gap: 20px;
+    padding: 60px 20px 120px 20px;
+    gap: 40px;
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
   }
   
   .gallery-item {
     height: 150px;
     min-width: 0;
+    /* Ensure items don't exceed container width */
+    max-width: calc(50vw - 40px); /* 2 columns with gap */
   }
   
   .gallery-image {
@@ -205,10 +214,6 @@
 }
 
 @media (max-width: 480px) {
-  .gallery-grid {
-    padding: 15px;
-    gap: 15px;
-  }
   
   .gallery-item {
     height: 120px;
