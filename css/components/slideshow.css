@@ -108,6 +108,54 @@
   flex: 1;
 }
 
+/* Split slide templates - fullscreen on one side, centered on the other */
+
+/* Split-left: fullscreen image on left, centered on right */
+.slide.slide-split-left {
+  display: flex;
+  padding: 0;
+  gap: 0;
+}
+
+.slide.slide-split-left img:first-child {
+  width: 50vw;
+  height: 100dvh;
+  max-height: none;
+  object-fit: cover;
+  flex: none;
+}
+
+.slide.slide-split-left img:last-child {
+  width: 50vw;
+  height: 70dvh;
+  object-fit: contain;
+  margin: auto;
+  flex: none;
+}
+
+/* Split-right: centered on left, fullscreen image on right */
+.slide.slide-split-right {
+  display: flex;
+  padding: 0;
+  gap: 0;
+}
+
+.slide.slide-split-right img:first-child {
+  width: 50vw;
+  height: 70dvh;
+  object-fit: contain;
+  margin: auto;
+  flex: none;
+}
+
+.slide.slide-split-right img:last-child {
+  width: 50vw;
+  height: 100dvh;
+  max-height: none;
+  object-fit: cover;
+  flex: none;
+}
+
 /* Responsive adjustments for diptych */
 @media (max-width: 768px) {
   .slide.slide-diptych {
@@ -119,6 +167,20 @@
     max-height: 35dvh;
     max-width: 90vw;
   }
+  
+  /* Stack split templates vertically on mobile */
+  .slide.slide-split-left,
+  .slide.slide-split-right {
+    flex-direction: column;
+  }
+  
+  .slide.slide-split-left img,
+  .slide.slide-split-right img {
+    width: 100vw;
+    height: 45dvh;
+    object-fit: contain;
+    margin: 0;
+  }
 }
 
 /* Navigation click areas - invisible overlays */
@@ -127,7 +189,6 @@
   top: 0;
   width: 50%;
   height: 100%;
-  cursor: pointer;
   z-index: 100;
   /* Invisible but clickable */
   background: transparent;
@@ -136,10 +197,12 @@
 
 .slideshow-nav-area.prev {
   left: 0;
+  cursor: w-resize;
 }
 
 .slideshow-nav-area.next {
   right: 0;
+  cursor: e-resize;
 }
 
 /* Hide the old navigation buttons */

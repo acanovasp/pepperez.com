@@ -37,7 +37,7 @@ const Slideshow = (function() {
     if (slideTemplates && slideTemplates.length > 0) {
       createSlidesFromTemplates(slideTemplates);
     } else {
-      createSlides(imagePaths);
+    createSlides(imagePaths);
     }
     
     // Set initial project counter

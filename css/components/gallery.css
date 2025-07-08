@@ -170,17 +170,18 @@
   top: 0;
   width: 50%;
   height: 100%;
-  cursor: pointer;
   z-index: 1100;
   background: transparent;
 }
 
 .lightbox-nav-area.prev {
   left: 0;
+  cursor: w-resize;
 }
 
 .lightbox-nav-area.next {
   right: 0;
+  cursor: e-resize;
 }
 
 /* Unified navigation areas for vertical swipe */
@@ -236,9 +237,9 @@
     opacity: 0.1;
     transition: opacity 0.3s ease;
   }
-
+  
   .gallery-page.project-info-visible .lightbox-image {
     opacity: 0.1;
     transition: opacity 0.3s ease;
   }
-}
+} 

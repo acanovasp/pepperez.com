@@ -13,22 +13,6 @@ body {
   background: white;
 }
 
-/* Header should be minimal or hidden for fullscreen experience */
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: var(--space-sm) var(--space-md);
-  margin: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .site-title {
   font-size: var(--font-size-base);
   margin: 0;
@@ -55,7 +39,7 @@ header {
   min-width: calc(100vw - 60px);
   background: transparent;
   z-index: 10;
-  color: #383838;
+  color: white;
   mix-blend-mode: difference;
   pointer-events: none; /* Allow clicks to pass through to slideshow navigation */
   /* Prevent layout shifts */
@@ -63,10 +47,9 @@ header {
   will-change: auto;
 }
 
-/* Override grid color to white on project and gallery pages */
-.project-page .projects-grid,
-.gallery-page .projects-grid {
-  color: white;
+/* Hover effect: when hovering over any project item, non-hovered items turn gray */
+.projects-grid:has(.project-item:hover) .project-item:not(:hover) {
+  color: #383838;
 }
 
 /* Project items */
@@ -80,6 +63,7 @@ header {
   /* Flexible minimum size that adapts to viewport */
   min-width: 80px;
   min-height: 60px;
+  transition: color 0.3s ease;
 }
 
 /* Enable pointer events on project items for homepage */
@@ -87,11 +71,7 @@ body:not(.project-page):not(.gallery-page) .project-item {
   pointer-events: auto;
 }
 
-.project-item:hover .project-info,
-.project-item:hover .project-id,
-.project-item:hover .project-slideshow-counter {
-  color: white;
-}
+
 
 /* Remove all hover effects on project cells */
 .project-thumbnail {
@@ -138,6 +118,34 @@ body:not(.project-page):not(.gallery-page) .project-item {
 
 .gallery-page .project-item:not(.project-item-hidden) {
   pointer-events: auto; /* Enable clicks on active project cell in gallery pages */
+}
+
+/* Slideshow opacity reduction on hover - only on project pages */
+.project-page .slideshow-container,
+.gallery-page .gallery-grid,
+.gallery-page .lightbox {
+  transition: filter 0.5s ease;
+}
+
+/* Reduce slideshow opacity when hovering over project items or contact cell */
+.project-page:has(.project-item:hover) .slideshow-container,
+.project-page:has(.contact-cell:hover) .slideshow-container,
+.gallery-page:has(.project-item:hover) .gallery-grid,
+.gallery-page:has(.contact-cell:hover) .gallery-grid,
+.gallery-page:has(.project-item:hover) .lightbox,
+.gallery-page:has(.contact-cell:hover) .lightbox {
+  filter: blur(10px);
+}
+
+/* Scale project items on hover - only on project pages */
+.project-page .project-item,
+.gallery-page .project-item {
+  transition: transform 0.3s ease;
+}
+
+.project-page .project-item:hover,
+.gallery-page .project-item:hover {
+  transform: scale(0.98);
 }
 
 /* Centered image overlay for hover effect */
@@ -207,6 +215,8 @@ body:not(.project-page):not(.gallery-page) .project-item {
   display: flex;
   flex-direction: column;
 }
+
+
 
 .copyright {
   display: flex;

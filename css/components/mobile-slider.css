@@ -165,7 +165,6 @@
     top: 0;
     width: 50%;
     height: 100%;
-    cursor: pointer;
     z-index: 15;
     background: transparent;
     pointer-events: auto;
@@ -173,10 +172,12 @@
 
   .project-page .mobile-slideshow-wrapper .nav-area.prev {
     left: 0;
+    cursor: w-resize;
   }
 
   .project-page .mobile-slideshow-wrapper .nav-area.next {
     right: 0;
+    cursor: e-resize;
   }
 
   .project-page .mobile-slide {
@@ -210,17 +211,18 @@
     top: 0;
     width: 50%;
     height: 100%;
-    cursor: pointer;
     z-index: 15;
     background: transparent;
   }
 
   .project-page .mobile-slideshow-nav-area.prev {
     left: 0;
+    cursor: w-resize;
   }
 
   .project-page .mobile-slideshow-nav-area.next {
     right: 0;
+    cursor: e-resize;
   }
 
   /* Mobile slideshow counter */
@@ -291,7 +293,6 @@
     top: 0;
     width: 50%;
     height: 100%;
-    cursor: pointer;
     z-index: 15;
     background: transparent;
     pointer-events: auto;
@@ -299,9 +300,11 @@
 
   .mobile-slider .nav-area.prev {
     left: 0;
+    cursor: w-resize;
   }
 
   .mobile-slider .nav-area.next {
     right: 0;
+    cursor: e-resize;
   }
 }

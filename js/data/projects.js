@@ -12,14 +12,16 @@ const projects = [
     location: 'Ladakh, India',
     client: 'Personal Project',
     folder: 'P-01',
-    coverImage: 'images/P-01/Ladakhi-Bakers1.webp', // Main thumbnail image for grid
+    coverImage: 'images/P-01/Ladakhi-Bakers16.webp', // Main thumbnail image for grid
     // Slide templates for different layouts
     slideTemplates: [
       { type: 'main', images: ['images/P-01/Ladakhi-Bakers1.webp'] },
       { type: 'fullheight', images: ['images/P-01/Ladakhi-Bakers2.webp'] },
       { type: 'diptych', images: ['images/P-01/Ladakhi-Bakers3.webp', 'images/P-01/Ladakhi-Bakers4.webp'] },
       { type: 'main', images: ['images/P-01/Ladakhi-Bakers5.webp'] },
-      { type: 'fullscreen', images: ['images/P-01/Ladakhi-Bakers6.webp'] }
+      { type: 'fullscreen', images: ['images/P-01/Ladakhi-Bakers6.webp'] },
+      { type: 'split-left', images: ['images/P-01/Ladakhi-Bakers7.webp', 'images/P-01/Ladakhi-Bakers8.webp'] },
+      { type: 'split-right', images: ['images/P-01/Ladakhi-Bakers9.webp', 'images/P-01/Ladakhi-Bakers10.webp'] }
     ],
     totalImages: 56 // Total images in the project folder (gallery will automatically show all 15)
   },
@@ -31,7 +33,7 @@ const projects = [
     location: 'Barcelona, Spain',
     client: 'Personal Project',
     folder: 'P-02',
-    coverImage: 'images/P-02/Miralls1.webp',
+    coverImage: 'images/P-02/Miralls13.webp',
     // Slide templates for different layouts
     slideTemplates: [
       { type: 'fullheight', images: ['images/P-02/Miralls1.webp'] },
@@ -48,7 +50,7 @@ const projects = [
     location: 'Morocco',
     client: 'Personal Project',
     folder: 'P-03',
-    coverImage: 'images/P-03/Morocco1.webp',
+    coverImage: 'images/P-03/Morocco107.webp',
     // Slide templates for different layouts
     slideTemplates: [
       { type: 'fullheight', images: ['images/P-03/Morocco1.webp'] },
@@ -65,7 +67,7 @@ const projects = [
     location: 'India',
     client: 'Personal Project',
     folder: 'P-04',
-    coverImage: 'images/P-04/Thinking-Mu1.webp',
+    coverImage: 'images/P-04/Thinking-Mu39.webp',
     // Slide templates for different layouts
     slideTemplates: [
       { type: 'fullheight', images: ['images/P-04/Thinking-Mu1.webp'] },
@@ -82,12 +84,32 @@ const projects = [
     location: 'Varanasi, India',
     client: 'Personal Project',
     folder: 'P-05',
-    coverImage: 'images/P-05/Varanasi1.webp',
+    coverImage: 'images/P-05/Varanasi12.webp',
     // Slide templates for different layouts
     slideTemplates: [
-      { type: 'fullheight', images: ['images/P-05/Varanasi1.webp'] },
-      { type: 'diptych', images: ['images/P-05/Varanasi2.webp', 'images/P-05/Varanasi3.webp'] },
-      { type: 'fullscreen', images: ['images/P-05/Varanasi4.webp'] }
+      { type: 'split-left', images: ['images/P-05/Varanasi21.webp', 'images/P-05/Varanasi22.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi5.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi9.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi11.webp'] },
+      { type: 'split-right', images: ['images/P-05/Varanasi37.webp', 'images/P-05/Varanasi38.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi28.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi32.webp'] },
+      { type: 'split-left', images: ['images/P-05/Varanasi1.webp', 'images/P-05/Varanasi2.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi10.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi12.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi49.webp'] },
+      { type: 'split-right', images: ['images/P-05/Varanasi33.webp', 'images/P-05/Varanasi15.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi30.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi45.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi24.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi17.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi13.webp'] },
+      { type: 'split-left', images: ['images/P-05/Varanasi8.webp', 'images/P-05/Varanasi26.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi34.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi14.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi18.webp'] },
+      { type: 'main', images: ['images/P-05/Varanasi19.webp'] },
+      { type: 'split-right', images: ['images/P-05/Varanasi43.webp', 'images/P-05/Varanasi20.webp'] }
     ],
     totalImages: 50
   },
@@ -99,12 +121,30 @@ const projects = [
     location: 'Kirguistan',
     client: 'Personal Project',
     folder: 'P-06',
-    coverImage: 'images/P-06/Kirguistan1.webp',
+    coverImage: 'images/P-06/Kirguistan29.webp',
     // Slide templates for different layouts
     slideTemplates: [
-      { type: 'fullheight', images: ['images/P-06/Kirguistan1.webp'] },
-      { type: 'diptych', images: ['images/P-06/Kirguistan2.webp', 'images/P-06/Kirguistan3.webp'] },
-      { type: 'fullscreen', images: ['images/P-06/Kirguistan4.webp'] }
+      { type: 'main', images: ['images/P-06/Kirguistan9.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan5.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan13.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan29.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan17.webp'] },
+      { type: 'diptych', images: ['images/P-06/Kirguistan28.webp', 'images/P-06/Kirguistan27.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan22.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan8.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan34.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan35.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan23.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan31.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan1.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan33.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan10.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan4.webp'] },
+      { type: 'diptych', images: ['images/P-06/Kirguistan25.webp', 'images/P-06/Kirguistan26.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan30.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan2.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan3.webp'] },
+      { type: 'main', images: ['images/P-06/Kirguistan19.webp'] }
     ],
     totalImages: 35
   },
@@ -116,7 +156,7 @@ const projects = [
     location: 'Georgia',
     client: 'Personal Project',
     folder: 'P-07',
-    coverImage: 'images/P-07/Georgia1.webp',
+    coverImage: 'images/P-07/Georgia16.webp',
     // Slide templates for different layouts
     slideTemplates: [
       { type: 'fullheight', images: ['images/P-07/Georgia1.webp'] },
@@ -133,7 +173,7 @@ const projects = [
     location: 'Barcelona, Spain',
     client: 'Personal Project',
     folder: 'P-08',
-    coverImage: 'images/P-08/TheJumpingAge5.webp',
+    coverImage: 'images/P-08/TheJumpingAge29.webp',
     // Slide templates for different layouts
     slideTemplates: [
       { type: 'fullheight', images: ['images/P-08/TheJumpingAge5.webp'] },
@@ -158,56 +198,5 @@ const projects = [
       { type: 'fullscreen', images: ['images/P-09/Comercial4.webp'] }
     ],
     totalImages: 93
-  },
-  {
-    id: 'P-08',
-    title: 'The Jumping Age',
-    description: 'A contemplative study of coastlines and the relationship between land and sea. This series captures the ephemeral nature of coastal landscapes, documenting the ever-changing dialogue between solid ground and flowing water.',
-    date: 'February 2023',
-    location: 'Barcelona, Spain',
-    client: 'Personal Project',
-    folder: 'P-08',
-    coverImage: 'images/P-08/TheJumpingAge5.webp',
-    // Slide templates for different layouts
-    slideTemplates: [
-      { type: 'fullheight', images: ['images/P-08/TheJumpingAge5.webp'] },
-      { type: 'diptych', images: ['images/P-08/TheJumpingAge1.webp', 'images/P-08/TheJumpingAge2.webp'] },
-      { type: 'fullscreen', images: ['images/P-08/TheJumpingAge3.webp'] }
-    ],
-    totalImages: 32
-  },
-  {
-    id: 'P-08',
-    title: 'The Jumping Age',
-    description: 'A contemplative study of coastlines and the relationship between land and sea. This series captures the ephemeral nature of coastal landscapes, documenting the ever-changing dialogue between solid ground and flowing water.',
-    date: 'February 2023',
-    location: 'Barcelona, Spain',
-    client: 'Personal Project',
-    folder: 'P-08',
-    coverImage: 'images/P-08/TheJumpingAge5.webp',
-    // Slide templates for different layouts
-    slideTemplates: [
-      { type: 'fullheight', images: ['images/P-08/TheJumpingAge5.webp'] },
-      { type: 'diptych', images: ['images/P-08/TheJumpingAge1.webp', 'images/P-08/TheJumpingAge2.webp'] },
-      { type: 'fullscreen', images: ['images/P-08/TheJumpingAge3.webp'] }
-    ],
-    totalImages: 32
-  },
-  {
-    id: 'P-08',
-    title: 'The Jumping Age',
-    description: 'A contemplative study of coastlines and the relationship between land and sea. This series captures the ephemeral nature of coastal landscapes, documenting the ever-changing dialogue between solid ground and flowing water.',
-    date: 'February 2023',
-    location: 'Barcelona, Spain',
-    client: 'Personal Project',
-    folder: 'P-08',
-    coverImage: 'images/P-08/TheJumpingAge5.webp',
-    // Slide templates for different layouts
-    slideTemplates: [
-      { type: 'fullheight', images: ['images/P-08/TheJumpingAge5.webp'] },
-      { type: 'diptych', images: ['images/P-08/TheJumpingAge1.webp', 'images/P-08/TheJumpingAge2.webp'] },
-      { type: 'fullscreen', images: ['images/P-08/TheJumpingAge3.webp'] }
-    ],
-    totalImages: 32
   }
 ]; 
